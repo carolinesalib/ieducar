@@ -203,6 +203,7 @@ class indice extends clsCadastro
     $instituicao_obrigatorio  = TRUE;
     $escola_curso_obrigatorio = TRUE;
     $curso_obrigatorio        = TRUE;
+    $escola_obrigatorio       = TRUE;
     $get_escola               = TRUE;
     $get_escola_curso_serie   = FALSE;
     $sem_padrao               = TRUE;
@@ -259,7 +260,7 @@ class indice extends clsCadastro
       $this->campoOculto('escola_param',$this->escola_param = $this->ref_cod_escola);
     }
 
-    $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
+    $this->campoLista('ref_ref_cod_serie', Portabilis_String_Utils::toLatin1('Série'), $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', NULL, $bloqueia);
 
     // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
@@ -331,7 +332,7 @@ class indice extends clsCadastro
 
     $this->campoTexto('sgl_turma', 'Sigla', $this->sgl_turma, 15, 15, FALSE);
 
-    $this->campoNumero('max_aluno', 'Máximo de Alunos', $this->max_aluno, 3, 3, TRUE);
+    $this->campoNumero('max_aluno', Portabilis_String_Utils::toLatin1('Máximo de Alunos'), $this->max_aluno, 3, 3, TRUE);
 
     $this->inputsHelper()->date('data_fechamento', array('required' => false,'label' => 'Data de fechamento' ,'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_fechamento)));
 
@@ -341,7 +342,7 @@ class indice extends clsCadastro
     $this->campoCheck('multiseriada', 'Multi-Seriada', $this->multiseriada, '',
       FALSE, FALSE);
 
-    $this->campoLista('ref_ref_cod_serie_mult','Série', array('' => 'Selecione'),
+    $this->campoLista('ref_ref_cod_serie_mult', Portabilis_String_Utils::toLatin1('Série'), array('' => 'Selecione'),
       '', '', FALSE, '', '', '', FALSE);
 
     $this->campoOculto('ref_ref_cod_serie_mult_',$this->ref_ref_cod_serie_mult);
