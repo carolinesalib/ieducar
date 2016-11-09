@@ -75,9 +75,25 @@ class TurmaController extends ApiCoreController
     return array('tipo-boletim' => $tipos[$tipo]);
   }
 
+  protected function multiSeriadoSearch() {
+    $sql = 'SELECT ref_cod_serie FROM pmieducar.turma_serie WHERE ref_cod_turma = $1';
+
+    $array = array();
+
+    $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($this->getRequest()->turma_id) ));
+
+    foreach ($resources as $reg) {
+      $array[] = $reg['ref_cod_serie'];
+    }
+
+    return array('series' => $array);
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'tipo-boletim'))
       $this->appendResponse($this->getTipoBoletim());
+    else if ($this->isRequestFor('get', 'multiseriado-search'))
+      $this->appendResponse($this->multiSeriadoSearch());
     else
       $this->notImplementedOperationError();
   }

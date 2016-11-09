@@ -43,7 +43,6 @@ class clsPmieducarTurma
 	var $nm_turma;
 	var $sgl_turma;
 	var $max_aluno;
-	var $multiseriada;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
@@ -59,10 +58,8 @@ class clsPmieducarTurma
 	var $ref_cod_instituicao;
 	var $ref_cod_curso;
 
-	var $ref_ref_cod_serie_mult;
-  var $ref_ref_cod_escola_mult;
-  var $visivel;
-  var $data_fechamento;
+	var $visivel;
+	var $data_fechamento;
 	// propriedades padrao
 
 	/**
@@ -133,7 +130,7 @@ class clsPmieducarTurma
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}turma";
 
-		$this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano, t.data_fechamento ";
+		$this->_campos_lista = $this->_todos_campos = "t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.visivel, t.turma_turno_id, t.tipo_boletim, t.ano, t.data_fechamento ";
 
 		if( is_numeric( $ref_cod_turma_tipo ) )
 		{
@@ -327,10 +324,6 @@ class clsPmieducarTurma
 		{
 			$this->max_aluno = $max_aluno;
 		}
-		if( is_numeric( $multiseriada ) )
-		{
-			$this->multiseriada = $multiseriada;
-		}
 		if( is_string( $data_cadastro ) )
 		{
 			$this->data_cadastro = $data_cadastro;
@@ -418,37 +411,6 @@ class clsPmieducarTurma
 			}
 		}
 
-		if( is_numeric( $ref_ref_cod_escola_mult ) && is_numeric( $ref_ref_cod_serie_mult ) )
-		{
-			if( class_exists( "clsPmieducarEscolaSerie" ) )
-			{
-				$tmp_obj = new clsPmieducarEscolaSerie( $ref_ref_cod_escola_mult, $ref_ref_cod_serie_mult );
-				if( method_exists( $tmp_obj, "existe") )
-				{
-					if( $tmp_obj->existe() )
-					{
-						$this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
-						$this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
-					}
-				}
-				else if( method_exists( $tmp_obj, "detalhe") )
-				{
-					if( $tmp_obj->detalhe() )
-					{
-						$this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
-						$this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
-					}
-				}
-			}
-			else
-			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.escola_serie WHERE ref_cod_escola = '{$ref_ref_cod_escola_mult}' AND ref_cod_serie = '{$ref_ref_cod_serie_mult}'" ) )
-				{
-					$this->ref_ref_cod_escola_mult = $ref_ref_cod_escola_mult;
-					$this->ref_ref_cod_serie_mult = $ref_ref_cod_serie_mult;
-				}
-			}
-		}
 		if (is_bool($visivel))
 		{
 			$this->visivel = dbBool($visivel);
@@ -467,7 +429,7 @@ class clsPmieducarTurma
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_usuario_cad ) /*&& is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo )*/ && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo ) )
+		if( is_numeric( $this->ref_usuario_cad ) /*&& is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo )*/ && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->ref_cod_turma_tipo ) )
 		{
 			$db = new clsBanco();
 
@@ -515,12 +477,6 @@ class clsPmieducarTurma
 			{
 				$campos .= "{$gruda}max_aluno";
 				$valores .= "{$gruda}'{$this->max_aluno}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->multiseriada ) )
-			{
-				$campos .= "{$gruda}multiseriada";
-				$valores .= "{$gruda}'{$this->multiseriada}'";
 				$gruda = ", ";
 			}
 			if( is_numeric( $this->ref_cod_regente ) )
@@ -581,18 +537,6 @@ class clsPmieducarTurma
 			{
 				$campos .= "{$gruda}hora_fim_intervalo";
 				$valores .= "{$gruda}'{$this->hora_fim_intervalo}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_ref_cod_escola_mult ) )
-			{
-				$campos .= "{$gruda}ref_ref_cod_escola_mult";
-				$valores .= "{$gruda}'{$this->ref_ref_cod_escola_mult}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_ref_cod_serie_mult ) )
-			{
-				$campos .= "{$gruda}ref_ref_cod_serie_mult";
-				$valores .= "{$gruda}'{$this->ref_ref_cod_serie_mult}'";
 				$gruda = ", ";
 			}
 			$this->visivel = dbBool($this->visivel) ? "TRUE" : "FALSE";
@@ -683,16 +627,6 @@ class clsPmieducarTurma
 				$set .= "{$gruda}max_aluno = '{$this->max_aluno}'";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->multiseriada ) )
-			{
-				$set .= "{$gruda}multiseriada = '{$this->multiseriada}'";
-				$gruda = ", ";
-			}
-			else
-			{
-				$set .= "{$gruda}multiseriada = '0'";
-				$gruda = ", ";
-			}
 
 			if( is_string( $this->data_cadastro ) )
 			{
@@ -749,26 +683,6 @@ class clsPmieducarTurma
 			if( is_numeric( $this->ref_cod_curso ) )
 			{
 				$set .= "{$gruda}ref_cod_curso = '{$this->ref_cod_curso}'";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_ref_cod_escola_mult ) )
-			{
-				$set .= "{$gruda}ref_ref_cod_escola_mult = '{$this->ref_ref_cod_escola_mult}'";
-				$gruda = ", ";
-			}
-			else
-			{
-				$set .= "{$gruda}ref_ref_cod_escola_mult = NULL";
-				$gruda = ", ";
-			}
-			if( is_numeric( $this->ref_ref_cod_serie_mult ) )
-			{
-				$set .= "{$gruda}ref_ref_cod_serie_mult = '{$this->ref_ref_cod_serie_mult}'";
-				$gruda = ", ";
-			}
-			else
-			{
-				$set .= "{$gruda}ref_ref_cod_serie_mult = NULL";
 				$gruda = ", ";
 			}
 			if (dbBool($this->visivel))
@@ -888,10 +802,10 @@ class clsPmieducarTurma
 			$modulo = $this->moduloMinimo();
 
 			$db = new clsBanco();
-			$db->Consulta("SELECT ref_ref_cod_serie, ref_ref_cod_escola, multiseriada, ref_ref_cod_serie_mult, ref_ref_cod_escola_mult FROM pmieducar.turma WHERE cod_turma = '{$this->cod_turma}'");
+			$db->Consulta("SELECT ref_ref_cod_serie, ref_ref_cod_escolaFROM pmieducar.turma WHERE cod_turma = '{$this->cod_turma}'");
 
 			$db->ProximoRegistro();
-			list($cod_serie,$cod_escola,$multiseriada,$cod_serie_mult,$cod_escola_mult) = $db->Tupla();
+			list($cod_serie,$cod_escola) = $db->Tupla();
 
 			// ve se existe alguem que nao tem nenhuma nota nesse modulo
 			$todas_disciplinas = $db->CampoUnico("
@@ -910,101 +824,22 @@ class clsPmieducarTurma
 
 			if( $todas_disciplinas )
 			{
-				// existe um aluno que nao tem nenhuma nota nesse modulo
-				if( $multiseriada )
-				{
-					$aluno_normal = false;
-					$aluno_multi = false;
-					$filtro = "";
-
-					// ve se tem algum aluno cadastrado na serie normal
-					$db->Consulta("SELECT 1 FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_escola = '{$cod_escola}' AND ref_cod_serie = '{$cod_serie}' AND aprovado = 3 AND ativo = 1 ");
-					if ($db->ProximoRegistro())
-					{
-						$aluno_normal = true;
-					}
-
-					if(is_numeric($cod_serie_mult))
-					{
-						// ve se tem algum aluno na serie alterantiva
-						$db->Consulta("SELECT 1 FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_escola = '{$cod_escola}' AND ref_cod_serie = '{$cod_serie_mult}' AND aprovado = 3 AND ativo = 1 ");
-						if ($db->ProximoRegistro())
-						{
-							$aluno_multi = true;
-						}
-					}
-
-					// monta o filtro de acordo com os alunos na serie normal ou alternativa
-					if ($aluno_normal || $aluno_multi)
-					{
-						if ($aluno_normal)
-						{
-							if($aluno_multi)
-							{
-								$filtro = " AND ( ref_ref_cod_serie = '{$cod_serie}' OR ref_ref_cod_serie = '{$cod_serie_mult}' )";
-							}
-							else
-							{
-								$filtro = " AND ref_ref_cod_serie = '{$cod_serie}'";
-							}
-						}
-						else
-						{
-							$filtro = " AND ref_ref_cod_serie = '{$cod_serie_mult}'";
-						}
-					}
-
-					$db->Consulta("SELECT ref_cod_disciplina, ref_ref_cod_serie FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_escola = '{$cod_escola}' {$filtro} AND ativo = 1");
-				}
-				else
-				{
-					// nao eh multi-seriada
-					$db->Consulta("SELECT ref_cod_disciplina, ref_ref_cod_serie FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_escola = '{$cod_escola}' AND ref_ref_cod_serie = '{$cod_serie}' AND ativo = 1");
-				}
+				$db->Consulta("SELECT ref_cod_disciplina, ref_ref_cod_serie FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_escola = '{$cod_escola}' AND ref_ref_cod_serie = '{$cod_serie}' AND ativo = 1");
 			}
 			else
 			{
 				// todos os alunos tem pelo menos uma nota, vamos ver quais as disciplinas que estao faltando
 				$qtd_alunos = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_serie = '{$cod_serie}' AND aprovado = 3 AND ativo = 1");
-				if( $multiseriada )
-				{
-					$qtd_alunos_mult = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_serie = '{$cod_serie_mult}' AND aprovado = 3 AND ativo = 1");
-//					encontra as disciplinas que ainda precisam receber nota
-					$sql = "
-					(
-						SELECT ref_cod_disciplina, serie FROM
-						(
-							SELECT ds.ref_cod_disciplina, {$cod_serie} AS serie
-							, ( SELECT COUNT(0) FROM pmieducar.dispensa_disciplina dd, pmieducar.v_matricula_matricula_turma mmt WHERE dd.ativo = 1 AND dd.ref_cod_disciplina = ds.ref_cod_disciplina AND mmt.cod_matricula = dd.ref_cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola}' AND mmt.ref_cod_serie = '{$cod_serie}' ) AS dispensas
-							, ( SELECT COUNT(0) FROM pmieducar.nota_aluno na, pmieducar.v_matricula_matricula_turma mmt WHERE na.ativo = 1 AND na.ref_cod_disciplina = ds.ref_cod_disciplina AND na.modulo = '{$modulo}' AND na.ref_cod_matricula = mmt.cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola}' AND mmt.ref_cod_serie = '{$cod_serie}' ) AS notas
-							FROM pmieducar.escola_serie_disciplina ds WHERE ds.ativo = 1 AND ref_ref_cod_serie = '{$cod_serie}' AND ref_ref_cod_escola = '{$cod_escola}'
-						) AS sub1 WHERE dispensas + notas < $qtd_alunos
-					)
-					UNION
-					(
-						SELECT ref_cod_disciplina, serie FROM
-						(
-							SELECT ds.ref_cod_disciplina, {$cod_serie_mult} AS serie
-							, ( SELECT COUNT(0) FROM pmieducar.dispensa_disciplina dd, pmieducar.v_matricula_matricula_turma mmt WHERE dd.ativo = 1 AND dd.ref_cod_disciplina = ds.ref_cod_disciplina AND mmt.cod_matricula = dd.ref_cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola_mult}' AND mmt.ref_cod_serie = '{$cod_serie_mult}' ) AS dispensas
-							, ( SELECT COUNT(0) FROM pmieducar.nota_aluno na, pmieducar.v_matricula_matricula_turma mmt WHERE na.ativo = 1 AND na.ref_cod_disciplina = ds.ref_cod_disciplina AND na.modulo = '{$modulo}' AND na.ref_cod_matricula = mmt.cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola_mult}' AND mmt.ref_cod_serie = '{$cod_serie_mult}' ) AS notas
-							FROM pmieducar.escola_serie_disciplina ds WHERE ds.ativo = 1 AND ref_ref_cod_serie = '{$cod_serie_mult}' AND ref_ref_cod_escola = '{$cod_escola_mult}'
-						) AS sub2 WHERE dispensas + notas < $qtd_alunos_mult
-					)
-					";
 
-				}
-				else
-				{
-					$sql = "
-					SELECT ref_cod_disciplina, serie FROM
-					(
-						SELECT ds.ref_cod_disciplina, {$cod_serie} AS serie
-						, ( SELECT COUNT(0) FROM pmieducar.dispensa_disciplina dd, pmieducar.v_matricula_matricula_turma mmt WHERE dd.ativo = 1 AND dd.ref_cod_disciplina = ds.ref_cod_disciplina AND mmt.cod_matricula = dd.ref_cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola}' AND mmt.ref_cod_serie = '{$cod_serie}' ) AS dispensas
-						, ( SELECT COUNT(0) FROM pmieducar.nota_aluno na, pmieducar.v_matricula_matricula_turma mmt WHERE na.ativo = 1 AND na.ref_cod_disciplina = ds.ref_cod_disciplina AND na.modulo = '{$modulo}' AND na.ref_cod_matricula = mmt.cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola}' AND mmt.ref_cod_serie = '{$cod_serie}' ) AS notas
-						FROM pmieducar.escola_serie_disciplina ds WHERE ds.ativo = 1 AND ref_ref_cod_serie = '{$cod_serie}' AND ref_ref_cod_escola = '{$cod_escola}'
-					) AS sub1 WHERE dispensas + notas < $qtd_alunos
-					";
-				}
+				$sql = "
+				SELECT ref_cod_disciplina, serie FROM
+				(
+					SELECT ds.ref_cod_disciplina, {$cod_serie} AS serie
+					, ( SELECT COUNT(0) FROM pmieducar.dispensa_disciplina dd, pmieducar.v_matricula_matricula_turma mmt WHERE dd.ativo = 1 AND dd.ref_cod_disciplina = ds.ref_cod_disciplina AND mmt.cod_matricula = dd.ref_cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola}' AND mmt.ref_cod_serie = '{$cod_serie}' ) AS dispensas
+					, ( SELECT COUNT(0) FROM pmieducar.nota_aluno na, pmieducar.v_matricula_matricula_turma mmt WHERE na.ativo = 1 AND na.ref_cod_disciplina = ds.ref_cod_disciplina AND na.modulo = '{$modulo}' AND na.ref_cod_matricula = mmt.cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola}' AND mmt.ref_cod_serie = '{$cod_serie}' ) AS notas
+					FROM pmieducar.escola_serie_disciplina ds WHERE ds.ativo = 1 AND ref_ref_cod_serie = '{$cod_serie}' AND ref_ref_cod_escola = '{$cod_escola}'
+				) AS sub1 WHERE dispensas + notas < $qtd_alunos
+				";
 				$db->Consulta($sql);
 			}
 			while( $db->ProximoRegistro() )
@@ -1188,21 +1023,11 @@ class clsPmieducarTurma
 		}
 		if( is_numeric( $int_ref_ref_cod_serie ) )
 		{
-			if($bool_verifica_serie_multiseriada == true)
-			{
-				$mult = " OR  t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie}' ";
-			}
-
-			$filtros .= "{$whereAnd} ( t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}' $mult )";
+			$filtros .= "{$whereAnd} ( t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}')";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_ref_cod_escola ) )
 		{
-			/*if($bool_verifica_serie_multiseriada === true)
-			{
-				$mult = " OR  t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola}' ";
-			}*/
-
 			$filtros .= "{$whereAnd} ( t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}' )";
 			$whereAnd = " AND ";
 		}
@@ -1224,11 +1049,6 @@ class clsPmieducarTurma
 		if( is_numeric( $int_max_aluno ) )
 		{
 			$filtros .= "{$whereAnd} t.max_aluno = '{$int_max_aluno}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_multiseriada ) )
-		{
-			$filtros .= "{$whereAnd} t.multiseriada = '{$int_multiseriada}'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $date_data_cadastro_ini ) )
@@ -1334,16 +1154,6 @@ class clsPmieducarTurma
 		if( is_numeric( $int_ref_cod_curso ))
 		{
 			$filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_ref_cod_escola_mult ) )
-		{
-			$filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_ref_cod_serie_mult ))
-		{
-			$filtros .= "{$whereAnd} t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric($int_qtd_min_alunos_matriculados) )
@@ -1505,11 +1315,6 @@ and  e.cod_escola = t.ref_ref_cod_escola
 			$filtros .= "{$whereAnd} t.max_aluno = '{$int_max_aluno}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_multiseriada ) )
-		{
-			$filtros .= "{$whereAnd} t.multiseriada = '{$int_multiseriada}'";
-			$whereAnd = " AND ";
-		}
 		if( is_string( $date_data_cadastro_ini ) )
 		{
 			$filtros .= "{$whereAnd} t.data_cadastro >= '{$date_data_cadastro_ini}'";
@@ -1613,16 +1418,6 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		if( is_numeric( $int_ref_cod_curso ) )
 		{
 			$filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_ref_cod_escola_mult ) )
-		{
-			$filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_ref_cod_serie_mult ) )
-		{
-			$filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric($int_qtd_min_alunos_matriculados) )
@@ -1765,11 +1560,6 @@ and  e.cod_escola = t.ref_ref_cod_escola
 			$filtros .= "{$whereAnd} t.max_aluno = '{$int_max_aluno}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_multiseriada ) )
-		{
-			$filtros .= "{$whereAnd} t.multiseriada = '{$int_multiseriada}'";
-			$whereAnd = " AND ";
-		}
 		if( is_string( $date_data_cadastro_ini ) )
 		{
 			$filtros .= "{$whereAnd} t.data_cadastro >= '{$date_data_cadastro_ini}'";
@@ -1863,16 +1653,6 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		if( is_numeric( $int_ref_cod_curso ) )
 		{
 			$filtros .= "{$whereAnd} t.ref_cod_curso = '{$int_ref_cod_curso}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_ref_cod_escola_mult ) )
-		{
-			$filtros .= "{$whereAnd} t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola_mult}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_ref_cod_serie_mult ) )
-		{
-			$filtros .= "{$whereAnd} t.int_ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie_mult}'";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric($int_qtd_min_alunos_matriculados) )
@@ -2109,5 +1889,22 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		}
 		return false;
 	}
+
+	/**
+	 * Adiciona as séies da turma quando for multiseriada
+	 */
+	function updateMultiseriado($series) {
+		if (!$this->cod_turma) return;
+
+		$db = new clsBanco();
+		$db->Consulta("DELETE FROM pmieducar.turma_serie WHERE ref_cod_turma = {$this->cod_turma};");
+
+		if (!is_array($series)) return;
+
+		foreach ($series as $ref_cod_serie) {
+			$db->Consulta("INSERT INTO pmieducar.turma_serie VALUES ({$this->cod_turma}, {$ref_cod_serie});");
+		}
+	}
+
 }
 ?>

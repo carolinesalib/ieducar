@@ -118,6 +118,8 @@ class indice extends clsCadastro
   var $excluir_dia_semana;
   var $visivel;
 
+  var $multiseriado;
+
   var $dias_da_semana = array(
     '' => 'Selecione',
     1  => 'Domingo',
@@ -339,13 +341,13 @@ class indice extends clsCadastro
     $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
     $this->campoCheck('visivel', 'Ativo', $ativo);
 
-    $this->campoCheck('multiseriada', 'Multi-Seriada', $this->multiseriada, '',
-      FALSE, FALSE);
+    $helperOptions = array('objectName' => 'multiseriado');
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Multi-seriada'),
+                           'size' => 150,
+                           'required' => false,
+                           'options' => $this->multiseriado);
 
-    $this->campoLista('ref_ref_cod_serie_mult', Portabilis_String_Utils::toLatin1('Série'), array('' => 'Selecione'),
-      '', '', FALSE, '', '', '', FALSE);
-
-    $this->campoOculto('ref_ref_cod_serie_mult_',$this->ref_ref_cod_serie_mult);
+    $this->inputsHelper()->multipleSearchMultiSeriado('', $options, $helperOptions);
 
     $this->campoQuebra2();
 
@@ -719,13 +721,6 @@ class indice extends clsCadastro
 
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
-    if (isset($this->multiseriada)) {
-      $this->multiseriada = 1;
-    }
-    else {
-      $this->multiseriada = 0;
-    }
-
     if (isset($this->visivel)) {
       $this->visivel = TRUE;
     }
@@ -742,11 +737,11 @@ class indice extends clsCadastro
         $obj = new clsPmieducarTurma(NULL, NULL, $this->pessoa_logada,
           $this->ref_ref_cod_serie, $this->ref_cod_escola,
           $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
-          $this->max_aluno, $this->multiseriada, NULL, NULL, 1,
+          $this->max_aluno, NULL, NULL, NULL, 1,
           $this->ref_cod_turma_tipo, $this->hora_inicial, $this->hora_final,
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
-          $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
+          $this->ref_cod_curso, NULL, $this->ref_cod_escola,
           $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
 
         $cadastrou = $obj->cadastra();
@@ -786,13 +781,16 @@ class indice extends clsCadastro
             }
           }
 
+          $turma = new clsPmieducarTurma($this->cod_turma);
+          $turma->updateMultiseriado($this->multiseriado);
+
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
           header('Location: educar_turma_lst.php');
           die();
         }
 
         $this->mensagem = Portabilis_String_utils::toLatin1('Cadastro não realizado.');
-        echo "<!--\nErro ao cadastrar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
+        echo "<!--\nErro ao cadastrar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno )  && is_numeric( $this->ref_cod_turma_tipo )\n-->";
 
         return FALSE;
       }
@@ -808,25 +806,27 @@ class indice extends clsCadastro
       $obj = new clsPmieducarTurma(null, null, $this->pessoa_logada,
         $this->ref_ref_cod_serie, $this->ref_cod_escola,
         $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
-        $this->max_aluno, $this->multiseriada, null, null, 1,
+        $this->max_aluno, NULL, null, null, 1,
         $this->ref_cod_turma_tipo, $this->hora_inicial, $this->hora_final,
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo,
         $this->ref_cod_regente, $this->ref_cod_instituicao_regente,
         $this->ref_cod_instituicao, $this->ref_cod_curso,
-        $this->ref_ref_cod_serie_mult, $this->ref_cod_escola, $this->visivel,
+        NULL, $this->ref_cod_escola, $this->visivel,
         $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
 
       $cadastrou = $obj->cadastra();
 
-
       if ($cadastrou) {
+        $turma = new clsPmieducarTurma($this->cod_turma);
+        $turma->updateMultiseriado($this->multiseriado);
+
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         header('Location: educar_turma_lst.php');
         die();
       }
 
       $this->mensagem = Portabilis_String_utils::toLatin1('Cadastro não realizado.');
-      echo "<!--\nErro ao cadastrar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
+      echo "<!--\nErro ao cadastrar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
 
       return FALSE;
     }
@@ -850,13 +850,6 @@ class indice extends clsCadastro
 
     $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
-    if (isset($this->multiseriada)) {
-      $this->multiseriada = 1;
-    }
-    else {
-      $this->multiseriada = 0;
-    }
-
     if (isset($this->visivel)) {
       $this->visivel = TRUE;
     }
@@ -873,11 +866,11 @@ class indice extends clsCadastro
         $obj = new clsPmieducarTurma($this->cod_turma, $this->pessoa_logada, NULL,
           $this->ref_ref_cod_serie, $this->ref_cod_escola,
           $this->ref_cod_infra_predio_comodo, $this->nm_turma, $this->sgl_turma,
-          $this->max_aluno, $this->multiseriada, NULL, NULL, 1,
+          $this->max_aluno, NULL, NULL, NULL, 1,
           $this->ref_cod_turma_tipo, $this->hora_inicial, $this->hora_final,
           $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
           $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
-          $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
+          $this->ref_cod_curso, NULL, $this->ref_cod_escola,
           $this->visivel,
           $this->turma_turno_id,
           $this->tipo_boletim,
@@ -930,7 +923,7 @@ class indice extends clsCadastro
         }
         else {
           $this->mensagem = Portabilis_String_utils::toLatin1('Edição não realizada.');
-          echo "<!--\nErro ao editar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
+          echo "<!--\nErro ao editar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
 
           return FALSE;
         }
@@ -947,11 +940,11 @@ class indice extends clsCadastro
     elseif ($this->padrao_ano_escolar == 1) {
       $obj = new clsPmieducarTurma($this->cod_turma, $this->pessoa_logada, NULL,
         $this->ref_ref_cod_serie, $this->ref_cod_escola, $this->ref_cod_infra_predio_comodo,
-        $this->nm_turma, $this->sgl_turma, $this->max_aluno, $this->multiseriada,
+        $this->nm_turma, $this->sgl_turma, $this->max_aluno, NULL,
         NULL, NULL, 1, $this->ref_cod_turma_tipo, $this->hora_inicial, $this->hora_final,
         $this->hora_inicio_intervalo, $this->hora_fim_intervalo, $this->ref_cod_regente,
         $this->ref_cod_instituicao_regente, $this->ref_cod_instituicao,
-        $this->ref_cod_curso, $this->ref_ref_cod_serie_mult, $this->ref_cod_escola,
+        $this->ref_cod_curso, NULL, $this->ref_cod_escola,
         $this->visivel, $this->turma_turno_id, $this->tipo_boletim, $this->ano, $this->data_fechamento);
 
       $editou = $obj->edita();
@@ -969,6 +962,9 @@ class indice extends clsCadastro
       CleanComponentesCurriculares::destroyOldResources($anoLetivo);
     }
 
+    $turma = new clsPmieducarTurma($this->cod_turma);
+    $turma->updateMultiseriado($this->multiseriado);
+
     if ($editou) {
       $this->mensagem .= 'Edição efetuada com sucesso.';
       header('Location: educar_turma_lst.php');
@@ -976,7 +972,7 @@ class indice extends clsCadastro
     }
     else {
       $this->mensagem = Portabilis_String_utils::toLatin1('Edição não realizada.');
-      echo "<!--\nErro ao editar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
+      echo "<!--\nErro ao editar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
 
       return FALSE;
     }
@@ -1253,23 +1249,6 @@ var evtOnLoad = function()
   setVisibility('tr_ds_hora_final',false);
   setVisibility('tr_bt_incluir_dia_semana',false);
 
-  if (!document.getElementById('ref_ref_cod_serie').value) {
-    setVisibility('tr_multiseriada',false);
-    setVisibility('tr_ref_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-    setVisibility('ref_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-  }
-  else {
-    if(document.getElementById('multiseriada').checked){
-      changeMultiSerie();
-      document.getElementById('ref_ref_cod_serie_mult').value =
-        document.getElementById('ref_ref_cod_serie_mult_').value;
-    }
-    else {
-      setVisibility('tr_ref_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-      setVisibility('ref_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-    }
-  }
-
   // HIDE quebra de linha
   var hr_tag = document.getElementsByTagName('hr');
 
@@ -1323,11 +1302,8 @@ document.getElementById('ref_cod_escola').onchange = function()
 {
   getEscolaCurso();
   getComodo();
-  changeMultiSerie();
   getEscolaCursoSerie();
   PadraoAnoEscolar(null);
-  changeMultiSerie();
-  hideMultiSerie();
 
   if (document.getElementById('ref_cod_escola').value == '') {
     getCurso();
@@ -1336,11 +1312,6 @@ document.getElementById('ref_cod_escola').onchange = function()
 
 document.getElementById('ref_cod_curso').onchange = function()
 {
-  setVisibility('tr_multiseriada', document.getElementById('ref_ref_cod_serie').value ? true : false);
-  setVisibility('tr_ref_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-  setVisibility('ref_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-
-  hideMultiSerie();
   getEscolaCursoSerie();
 
   PadraoAnoEscolar_xml();
@@ -1354,63 +1325,6 @@ function PadraoAnoEscolar_xml()
   xml1.envia(strURL);
 }
 
-function changeMultiSerie()
-{
-  var campoCurso = document.getElementById('ref_cod_curso').value;
-  var campoSerie = document.getElementById('ref_ref_cod_serie').value;
-
-  var xml1 = new ajax(atualizaMultiSerie);
-  strURL   = 'educar_sequencia_serie_xml.php?cur=' + campoCurso + '&ser_dif=' + campoSerie;
-
-  xml1.envia(strURL);
-}
-
-function atualizaMultiSerie(xml)
-{
-  var campoMultiSeriada = document.getElementById('multiseriada');
-  var checked = campoMultiSeriada.checked;
-
-  var multiBool = (document.getElementById('multiseriada').checked == true &&
-                   document.getElementById('ref_ref_cod_serie').value != '') ? true : false;
-
-  setVisibility('tr_ref_ref_cod_serie_mult', multiBool);
-  setVisibility('ref_ref_cod_serie_mult', multiBool);
-
-  if (!checked){
-    document.getElementById('ref_ref_cod_serie_mult').value = '';
-    return;
-  }
-
-  var campoEscola     = document.getElementById('ref_cod_escola').value;
-  var campoCurso      = document.getElementById('ref_cod_curso').value;
-  var campoSerieMult  = document.getElementById('ref_ref_cod_serie_mult');
-  var campoSerie      = document.getElementById('ref_ref_cod_serie');
-
-  campoSerieMult.length = 1;
-  campoSerieMult.options[0] = new Option(stringUtils.toUtf8('Selecione uma série'), '', false, false);
-
-  var multi_serie = xml.getElementsByTagName('serie');
-
-  if (multi_serie.length) {
-    for (var i = 0; i < multi_serie.length; i++) {
-      campoSerieMult.options[campoSerieMult.options.length] = new Option(
-        multi_serie[i].firstChild.data, multi_serie[i].getAttribute('cod_serie'), false, false
-      );
-    }
-  }
-
-  if (campoSerieMult.length == 1 && campoCurso != '') {
-    campoSerieMult.options[0] = new Option(stringUtils.toUtf8('O curso não possui nenhuma série'), '', false, false);
-  }
-
-  document.getElementById('ref_ref_cod_serie_mult').value = document.getElementById('ref_ref_cod_serie_mult_').value;
-}
-
-document.getElementById('multiseriada').onclick = function()
-{
-  changeMultiSerie();
-}
-
 document.getElementById('ref_ref_cod_serie').onchange = function()
 {
   if (this.value) {
@@ -1420,12 +1334,6 @@ document.getElementById('ref_ref_cod_serie').onchange = function()
     getComponentesCurriculares(this.value);
     getComponentesEscolaSerie(codEscola, this.value);
   }
-
-  if (document.getElementById('multiseriada').checked == true) {
-    changeMultiSerie();
-  }
-
-  hideMultiSerie();
 }
 
 function getComponentesCurriculares(campoSerie)
@@ -1498,17 +1406,6 @@ function parseComponentesCurricularesEscolaSerie(xml)
   }
 
   helpSpan.innerHTML = ret;
-}
-
-function hideMultiSerie()
-{
-  setVisibility('tr_multiseriada', document.getElementById('ref_ref_cod_serie').value != '' ? true : false);
-
-  var multiBool = (document.getElementById('multiseriada').checked == true &&
-                   document.getElementById('ref_ref_cod_serie').value != '')  ? true : false;
-
-  setVisibility('ref_ref_cod_serie_mult', multiBool);
-  setVisibility('tr_ref_ref_cod_serie_mult',multiBool);
 }
 
 function PadraoAnoEscolar(xml)
@@ -1697,14 +1594,6 @@ function valida_xml(xml)
     if (!document.getElementById('ref_ref_cod_serie').value) {
       alert(stringUtils.toUtf8("Preencha o campo 'Série' corretamente!"));
       document.getElementById('ref_ref_cod_serie').focus();
-      return false;
-    }
-  }
-
-  if (document.getElementById('multiseriada').checked) {
-    if (!document.getElementById('ref_ref_cod_serie_mult')){
-      alert(stringUtils.toUtf8("Preencha o campo 'Série Multi-seriada' corretamente!"));
-      document.getElementById('ref_ref_cod_serie_mult').focus();
       return false;
     }
   }
