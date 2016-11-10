@@ -79,9 +79,16 @@ class TurmaController extends ApiCoreController
         $turmas = Portabilis_Business_Professor::turmasAlocado($escolaId, $serieId, $userId);
 
       else {
-        $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') as nome from pmieducar.turma where ref_ref_cod_escola = $1
-                   and (ref_ref_cod_serie = $2 or ref_ref_cod_serie_mult = $2) and ativo = 1 and
-                   visivel != 'f' order by nm_turma asc";
+        $sql = "SELECT cod_turma AS id,
+                       nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') AS nome
+                  FROM pmieducar.turma
+                 INNER JOIN pmieducar.turma_serie ON (turma_serie.ref_cod_turma = turma.cod_turma)
+                 WHERE ref_ref_cod_escola = $1
+                   AND (ref_ref_cod_serie = $2 OR turma_serie.ref_cod_serie = $2)
+                   AND ativo = 1
+                   AND visivel != 'f'
+                 GROUP BY ano, cod_turma, nm_turma
+                 ORDER BY nm_turma ASC";
 
         $turmas = $this->fetchPreparedQuery($sql, array($escolaId, $serieId));
       }

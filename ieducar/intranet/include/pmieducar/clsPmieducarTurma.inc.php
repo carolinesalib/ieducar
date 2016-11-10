@@ -1023,7 +1023,11 @@ class clsPmieducarTurma
 		}
 		if( is_numeric( $int_ref_ref_cod_serie ) )
 		{
-			$filtros .= "{$whereAnd} ( t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}')";
+			$filtros .= "{$whereAnd} ( t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'
+									   OR EXISTS (SELECT 1
+									                FROM pmieducar.turma_serie
+									               WHERE turma_serie.ref_cod_serie = '{$int_ref_ref_cod_serie}'
+									                 AND turma_serie.ref_cod_turma = t.cod_turma))";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_ref_cod_escola ) )
