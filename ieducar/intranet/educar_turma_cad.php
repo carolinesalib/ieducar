@@ -781,7 +781,7 @@ class indice extends clsCadastro
             }
           }
 
-          $turma = new clsPmieducarTurma($this->cod_turma);
+          $turma = new clsPmieducarTurma($cadastrou);
           $turma->updateMultiseriado($this->multiseriado);
 
           $this->mensagem .= 'Cadastro efetuado com sucesso.';
@@ -817,7 +817,7 @@ class indice extends clsCadastro
       $cadastrou = $obj->cadastra();
 
       if ($cadastrou) {
-        $turma = new clsPmieducarTurma($this->cod_turma);
+        $turma = new clsPmieducarTurma($cadastrou);
         $turma->updateMultiseriado($this->multiseriado);
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
