@@ -7,6 +7,23 @@ $multiseriadoField.css('width', '307px');
 
 var handleGetMultiseriado = function(dataResponse) {
   updateChozen($multiseriadoField, dataResponse['options']);
+
+  // Seleciona as séries já cadastradas para a turma
+  if ($turmaField.val()) {
+
+    var additionalVars = {
+      turma_id : $turmaField.val()
+    };
+
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl('/module/Api/MultiSeriado', 'multiseriado-turma', additionalVars),
+      dataType : 'json',
+      data     : {},
+      success  : handleGetMultiseriadoSelected,
+    };
+
+    getResource(options);
+  }
 }
 
 var handleGetMultiseriadoSelected = function(dataResponse) {
@@ -33,23 +50,6 @@ var updateMultiseriado = function() {
       dataType : 'json',
       data     : {},
       success  : handleGetMultiseriado,
-    };
-
-    getResource(options);
-  }
-
-  // Seleciona as séries já cadastradas para a turma
-  if ($turmaField.val()) {
-
-    var additionalVars = {
-      turma_id : $turmaField.val()
-    };
-
-    var options = {
-      url      : getResourceUrlBuilder.buildUrl('/module/Api/MultiSeriado', 'multiseriado-turma', additionalVars),
-      dataType : 'json',
-      data     : {},
-      success  : handleGetMultiseriadoSelected,
     };
 
     getResource(options);
