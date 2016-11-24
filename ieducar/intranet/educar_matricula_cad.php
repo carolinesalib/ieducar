@@ -244,19 +244,6 @@ class indice extends clsCadastro
           return false;
         }
 
-        elseif ($curso['multi_seriado'] != 1) {
-          $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
-          $serie = $serie->detalhe();
-
-          if (is_array($serie) && count($serie))
-            $nomeSerie = $serie['nm_serie'];
-          else
-            $nomeSerie = '';
-
-          $this->mensagem .= "Este aluno já está matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso não é multi seriado, não é possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
-
-          return false;
-        }
       }
 
       else
