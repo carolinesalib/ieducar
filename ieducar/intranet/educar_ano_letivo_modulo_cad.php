@@ -515,8 +515,7 @@ class indice extends clsCadastro
                       'ref_cod_infra_predio_comodo', 'nm_turma', 'sgl_turma', 'max_aluno',
                       'data_cadastro', 'data_exclusao', 'ativo', 'ref_cod_turma_tipo', 'hora_inicial', 'hora_final',
                       'hora_inicio_intervalo', 'hora_fim_intervalo', 'ref_cod_regente', 'ref_cod_instituicao_regente',
-                      'ref_cod_instituicao',  'ref_cod_curso', 'ref_ref_cod_serie_mult', 'ref_ref_cod_escola_mult',
-                      'visivel', 'turma_turno_id', 'tipo_boletim', 'ano');
+                      'ref_cod_instituicao',  'ref_cod_curso', 'visivel', 'turma_turno_id', 'tipo_boletim', 'ano');
 
       $turmaDestino = new clsPmieducarTurma();
 

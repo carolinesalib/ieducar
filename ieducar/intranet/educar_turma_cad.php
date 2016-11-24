@@ -101,8 +101,6 @@ class indice extends clsCadastro
   var $ref_cod_regente;
   var $ref_cod_instituicao_regente;
 
-  var $ref_ref_cod_serie_mult;
-
   // Inclui módulo
   var $turma_modulo;
   var $incluir_modulo;

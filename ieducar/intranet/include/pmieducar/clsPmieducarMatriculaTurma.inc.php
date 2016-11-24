@@ -491,14 +491,8 @@ class clsPmieducarMatriculaTurma
     }
 
     if (is_numeric($int_ref_cod_serie)) {
-      if (!is_numeric($int_ref_cod_serie_mult)) {
-        $filtros .= "{$whereAnd} m.ref_ref_cod_serie = '{$int_ref_cod_serie}'";
-        $whereAnd = " AND ";
-      }
-      else {
-        $filtros .= "{$whereAnd} (m.ref_ref_cod_serie = '{$int_ref_cod_serie}' OR ref_ref_cod_serie_mult='{$int_ref_cod_serie_mult}')";
-        $whereAnd = " AND ";
-      }
+      $filtros .= "{$whereAnd} m.ref_ref_cod_serie = '{$int_ref_cod_serie}'";
+      $whereAnd = " AND ";
     }
 
     if (is_numeric($int_ref_cod_curso)) {
