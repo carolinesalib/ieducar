@@ -790,69 +790,6 @@ class clsPmieducarTurma
 	}
 
 	/**
-	 * Retorna as disciplinas do menor modulo
-	 *
-	 * @return bool
-	 */
-	function moduloMinimoDisciplina()
-	{
-		if( is_numeric( $this->cod_turma ) )
-		{
-			$disciplinas = array();
-			$modulo = $this->moduloMinimo();
-
-			$db = new clsBanco();
-			$db->Consulta("SELECT ref_ref_cod_serie, ref_ref_cod_escolaFROM pmieducar.turma WHERE cod_turma = '{$this->cod_turma}'");
-
-			$db->ProximoRegistro();
-			list($cod_serie,$cod_escola) = $db->Tupla();
-
-			// ve se existe alguem que nao tem nenhuma nota nesse modulo
-			$todas_disciplinas = $db->CampoUnico("
-			SELECT 1 FROM
-			(
-				SELECT cod_matricula
-				, ( SELECT COUNT(0) FROM pmieducar.nota_aluno n 			WHERE n.ativo = 1 AND n.ref_cod_matricula = cod_matricula AND n.modulo = '{$modulo}' )
-				+ ( SELECT COUNT(0) FROM pmieducar.dispensa_disciplina d 	WHERE d.ativo = 1 AND d.ref_cod_matricula = cod_matricula ) AS notas
-				FROM pmieducar.v_matricula_matricula_turma
-				WHERE ativo = 1
-				AND aprovado = 3
-				AND ref_cod_turma = '{$this->cod_turma}'
-			) AS sub1
-			WHERE notas = 0
-			");
-
-			if( $todas_disciplinas )
-			{
-				$db->Consulta("SELECT ref_cod_disciplina, ref_ref_cod_serie FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_escola = '{$cod_escola}' AND ref_ref_cod_serie = '{$cod_serie}' AND ativo = 1");
-			}
-			else
-			{
-				// todos os alunos tem pelo menos uma nota, vamos ver quais as disciplinas que estao faltando
-				$qtd_alunos = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_serie = '{$cod_serie}' AND aprovado = 3 AND ativo = 1");
-
-				$sql = "
-				SELECT ref_cod_disciplina, serie FROM
-				(
-					SELECT ds.ref_cod_disciplina, {$cod_serie} AS serie
-					, ( SELECT COUNT(0) FROM pmieducar.dispensa_disciplina dd, pmieducar.v_matricula_matricula_turma mmt WHERE dd.ativo = 1 AND dd.ref_cod_disciplina = ds.ref_cod_disciplina AND mmt.cod_matricula = dd.ref_cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola}' AND mmt.ref_cod_serie = '{$cod_serie}' ) AS dispensas
-					, ( SELECT COUNT(0) FROM pmieducar.nota_aluno na, pmieducar.v_matricula_matricula_turma mmt WHERE na.ativo = 1 AND na.ref_cod_disciplina = ds.ref_cod_disciplina AND na.modulo = '{$modulo}' AND na.ref_cod_matricula = mmt.cod_matricula AND mmt.ativo = 1 AND mmt.aprovado = 3 AND mmt.ref_cod_turma = '{$this->cod_turma}' AND mmt.ref_cod_escola = '{$cod_escola}' AND mmt.ref_cod_serie = '{$cod_serie}' ) AS notas
-					FROM pmieducar.escola_serie_disciplina ds WHERE ds.ativo = 1 AND ref_ref_cod_serie = '{$cod_serie}' AND ref_ref_cod_escola = '{$cod_escola}'
-				) AS sub1 WHERE dispensas + notas < $qtd_alunos
-				";
-				$db->Consulta($sql);
-			}
-			while( $db->ProximoRegistro() )
-			{
-				list($cod_disciplina,$cod_serie)=$db->Tupla();
-				$disciplinas[] = array( "cod_disciplina" => $cod_disciplina, "cod_serie" => $cod_serie );
-			}
-			return $disciplinas;
-		}
-		return false;
-	}
-
-	/**
 	 * Retorna as disciplinas do exame
 	 *
 	 * @return bool
