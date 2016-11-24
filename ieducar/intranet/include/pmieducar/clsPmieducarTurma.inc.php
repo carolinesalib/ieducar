@@ -1910,5 +1910,18 @@ and  e.cod_escola = t.ref_ref_cod_escola
 		}
 	}
 
+	function getSeries() {
+		if (!$this->cod_turma) return;
+
+		$db = new clsBanco();
+		$db->Consulta("SELECT ref_cod_serie FROM pmieducar.turma_serie WHERE ref_cod_turma = {$this->cod_turma};");
+
+		while($db->ProximoRegistro()) {
+			$tupla = $db->Tupla();
+			$resultado[] = $tupla['ref_cod_serie'];
+		}
+		return $resultado;
+	}
+
 }
 ?>

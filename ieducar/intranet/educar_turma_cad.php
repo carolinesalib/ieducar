@@ -79,7 +79,6 @@ class indice extends clsCadastro
   var $nm_turma;
   var $sgl_turma;
   var $max_aluno;
-  var $multiseriada;
   var $data_cadastro;
   var $data_exclusao;
   var $ativo;

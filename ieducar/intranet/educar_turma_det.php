@@ -79,7 +79,6 @@ class indice extends clsDetalhe
   var $nm_turma;
   var $sgl_turma;
   var $max_aluno;
-  var $multiseriada;
   var $data_cadastro;
   var $data_exclusao;
   var $ativo;
@@ -244,20 +243,22 @@ class indice extends clsDetalhe
 
     $this->addDetalhe(array('Situação', dbBool($registro['visivel']) ? 'Ativo' : 'Desativo'));
 
-    if ($registro['multiseriada'] == 1) {
-      if ($registro['multiseriada'] == 1) {
-        $registro['multiseriada'] = 'sim';
+    $turma = new clsPmieducarTurma($this->cod_turma);
+
+    $multiseriado = $turma->getSeries();
+
+    if (is_array($multiseriado)) {
+
+      $this->addDetalhe(array('Multi-Seriada', 'sim'));
+
+      foreach ($multiseriado as $key => $value) {
+        $serie = new clsPmieducarSerie($multiseriado[$key]);
+        $serie = $serie->detalhe();
+        $series_nome[] = $serie['nm_serie'];
       }
-      else {
-        $registro['multiseriada'] = 'não';
-      }
-
-      $this->addDetalhe(array('Multi-Seriada', $registro['multiseriada']));
-
-      $obj_serie_mult = new clsPmieducarSerie($registro['ref_ref_cod_serie_mult']);
-      $det_serie_mult = $obj_serie_mult->detalhe();
-
-      $this->addDetalhe(array('Série Multi-Seriada', $det_serie_mult['nm_serie']));
+      $this->addDetalhe(array('Série Multi-Seriada', implode(', ', $series_nome)));
+    } else {
+      $this->addDetalhe(array('Multi-Seriada', 'não'));
     }
 
     if ($padrao_ano_escolar == 1) {
