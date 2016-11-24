@@ -181,15 +181,14 @@ class indice extends clsListagem
 SELECT
   t.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie,
   t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma,
-  t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo,
+  t.max_aluno, t.data_cadastro, t.data_exclusao, t.ativo,
   t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo,
   t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,
-  t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult,
-  t.ref_ref_cod_escola_mult
+  t.ref_cod_instituicao, t.ref_cod_curso
 FROM
-  pmieducar.turma t
-WHERE
-  t.ref_ref_cod_serie_mult = {$this->ref_cod_serie}
+  pmieducar.turma t, pmieducar.turma_serie ts
+WHERE ts.ref_cod_turma = t.cod_turma
+  AND ts.ref_cod_serie = {$this->ref_cod_serie}
   AND t.ref_ref_cod_escola={$this->ref_cod_escola}
   AND t.ativo = '1'
   AND t.ref_ref_cod_escola = '{$this->ref_cod_escola}'";
