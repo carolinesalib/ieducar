@@ -71,23 +71,53 @@ class ComponenteCurricularController extends ApiCoreController
       }
 
       else {
-        $sql = "select cc.id, cc.nome, ac.nome as area_conhecimento, ac.secao as secao_area_conhecimento
-                from pmieducar.turma, modules.componente_curricular_turma as cct, modules.componente_curricular as cc, modules.area_conhecimento as ac, 
-                pmieducar.escola_ano_letivo as al where turma.cod_turma = $1 and cct.turma_id = turma.cod_turma and
-                cct.escola_id = turma.ref_ref_cod_escola and cct.componente_curricular_id = cc.id and al.ano = $2
-                and cct.escola_id = al.ref_cod_escola and cc.area_conhecimento_id = ac.id
-                order by ac.secao, ac.nome, cc.nome";
+        $sql = "SELECT cc.id,
+                       cc.nome,
+                       ac.nome AS area_conhecimento,
+                       ac.secao AS secao_area_conhecimento
+                FROM pmieducar.turma,
+                     modules.componente_curricular_turma AS cct,
+                     modules.componente_curricular AS cc,
+                     modules.area_conhecimento AS ac,
+                     pmieducar.escola_ano_letivo AS al
+                WHERE turma.cod_turma = $1
+                  AND cct.turma_id = turma.cod_turma
+                  AND cct.escola_id = turma.ref_ref_cod_escola
+                  AND cct.componente_curricular_id = cc.id
+                  AND al.ano = $2
+                  AND cct.escola_id = al.ref_cod_escola
+                  AND cc.area_conhecimento_id = ac.id
+                ORDER BY ac.secao,
+                         ac.nome,
+                         cc.nome";
 
         $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
 
-        if (count($ComponentesCurriculares) < 1) {
-          $sql = "select cc.id, cc.nome, ac.nome as area_conhecimento, ac.secao as secao_area_conhecimento from
-                  pmieducar.turma as t, pmieducar.escola_serie_disciplina as esd, modules.componente_curricular
-                  as cc, modules.area_conhecimento as ac, pmieducar.escola_ano_letivo as al where t.cod_turma = $1 and esd.ref_ref_cod_escola =
-                  t.ref_ref_cod_escola and esd.ref_ref_cod_serie = t.ref_ref_cod_serie and esd.ref_cod_disciplina =
-                  cc.id and al.ano = $2 and esd.ref_ref_cod_escola = al.ref_cod_escola and t.ativo = 1 and
-                  esd.ativo = 1 and al.ativo = 1 and cc.area_conhecimento_id = ac.id
-                  order by ac.secao, ac.nome, cc.nome";
+        if (count($componentesCurriculares) < 1) {
+          $sql = "SELECT DISTINCT cc.id,
+                         cc.nome,
+                         ac.nome AS area_conhecimento,
+                         ac.secao AS secao_area_conhecimento
+                  FROM pmieducar.turma AS t,
+                       pmieducar.turma_serie AS ts,
+                       pmieducar.escola_serie_disciplina AS esd,
+                       modules.componente_curricular AS cc,
+                       modules.area_conhecimento AS ac,
+                       pmieducar.escola_ano_letivo AS al
+                  WHERE t.cod_turma = $1
+                    AND ts.ref_cod_turma = t.cod_turma
+                    AND esd.ref_ref_cod_escola = t.ref_ref_cod_escola
+                    AND (esd.ref_ref_cod_serie = t.ref_ref_cod_serie OR esd.ref_ref_cod_serie = ts.ref_cod_serie)
+                    AND esd.ref_cod_disciplina = cc.id
+                    AND al.ano = $2
+                    AND esd.ref_ref_cod_escola = al.ref_cod_escola
+                    AND t.ativo = 1
+                    AND esd.ativo = 1
+                    AND al.ativo = 1
+                    AND cc.area_conhecimento_id = ac.id
+                  ORDER BY ac.secao,
+                           ac.nome,
+                           cc.nome";
 
           $componentesCurriculares = $this->fetchPreparedQuery($sql, array($turmaId, $ano));
         }

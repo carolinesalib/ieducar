@@ -82,7 +82,7 @@ class TurmaController extends ApiCoreController
         $sql = "SELECT cod_turma AS id,
                        nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') AS nome
                   FROM pmieducar.turma
-                 INNER JOIN pmieducar.turma_serie ON (turma_serie.ref_cod_turma = turma.cod_turma)
+                  LEFT JOIN pmieducar.turma_serie ON (turma_serie.ref_cod_turma = turma.cod_turma)
                  WHERE ref_ref_cod_escola = $1
                    AND (ref_ref_cod_serie = $2 OR turma_serie.ref_cod_serie = $2)
                    AND ativo = 1
