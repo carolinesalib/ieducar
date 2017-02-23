@@ -241,7 +241,18 @@ class indice extends clsCadastro
     }
 
     if ($this->matriculas_turma) {
-      $this->campoRotulo('titulo', 'Matr&iacute;culas', "<b>&nbsp;Alunos matriculados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque alunos para desenturmar</b><label style='display: block; width: 350px; margin-left: 196px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar Todos</label>");
+      $this->campoRotulo('titulo',
+                         'Matr&iacute;culas',
+                         "<b>&nbsp;Alunos matriculados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         Série&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         Marque alunos para desenturmar
+                         </b>
+                         <label style='display: block; width: 350px; margin-left: 336px;'>
+                           <input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar Todos
+                         </label>");
       foreach ($this->matriculas_turma as $matricula => $campo) {
         $obj_matricula = new clsPmieducarMatricula($matricula);
         $det_matricula = $obj_matricula->detalhe();
@@ -251,8 +262,15 @@ class indice extends clsCadastro
         $det_aluno = array_shift($lst_aluno);
         $nm_aluno = $det_aluno['nome_aluno'];
 
+        $serie = new clsPmieducarSerie($det_matricula['ref_ref_cod_serie']);
+        $serie = $serie->detalhe();
+        $nm_serie = $serie['nm_serie'];
+
         $this->campoTextoInv('ref_cod_matricula_' . $matricula, '', $nm_aluno,
           30, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_matricula');
+
+        $this->campoTexto('ref_cod_serie_' . $matricula, '', $nm_serie,
+          10, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_ref_cod_serie');
 
         $this->campoCheck('check_desenturma['.$matricula.']','',$matricula);
       }
