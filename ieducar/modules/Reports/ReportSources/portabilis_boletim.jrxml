@@ -478,16 +478,14 @@ nome_disciplina,
 
 
  FROM pmieducar.matricula,
- pmieducar.matricula_turma,
  modules.componente_curricular,
- pmieducar.turma_serie,
- pmieducar.turma
+ pmieducar.matricula_turma
+ INNER JOIN pmieducar.turma ON (turma.cod_turma = matricula_turma.ref_cod_turma)
+  LEFT JOIN pmieducar.turma_serie ON (turma_serie.ref_cod_turma = turma.cod_turma)
 
   WHERE
   matricula.ref_ref_cod_escola = $P{escola} AND
   matricula.ref_cod_curso = $P{curso} AND
-  turma.cod_turma = matricula_turma.ref_cod_turma AND
-  turma_serie.ref_cod_turma = matricula_turma.ref_cod_turma AND
   (turma.ref_ref_cod_serie = $P{serie} OR turma_serie.ref_cod_serie = $P{serie}) AND
   matricula.ativo = 1 AND
   matricula_turma.ref_cod_turma = $P{turma} AND
@@ -570,7 +568,7 @@ ORDER BY nome_aluno, nome_disciplina]]>
 	<field name="frequencia_boletim" class="java.lang.Double"/>
 	<field name="frequencia_boletim_componente" class="java.lang.Double"/>
 	<field name="tipo_presenca" class="java.lang.Integer"/>
-	<group name="matricula">
+	<group name="matricula" keepTogether="true">
 		<groupExpression><![CDATA[$F{matricula}]]></groupExpression>
 		<groupHeader>
 			<band height="158">
