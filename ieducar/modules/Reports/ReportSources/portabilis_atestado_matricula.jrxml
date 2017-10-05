@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="atestado_matricula" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b58c92c8-60b6-4afb-ae40-52aa24303ab2">
 	<property name="ireport.zoom" value="0.9090909090909092"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="165"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -24,6 +24,9 @@
        escola.cod_escola as cod_escola,
        escola_ano_letivo.ano,
        aluno.cod_aluno as cod_aluno,
+       (SELECT cod_aluno_inep
+          FROM modules.educacenso_cod_aluno
+         WHERE educacenso_cod_aluno.cod_aluno = aluno.cod_aluno) AS inep_aluno,
        (SELECT public.fcn_upper(curso.nm_curso)
 	      FROM pmieducar.curso
 		WHERE  curso.cod_curso = matricula.ref_cod_curso) as nm_curso,
@@ -185,6 +188,7 @@
 	<field name="cod_escola" class="java.lang.Integer"/>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="cod_aluno" class="java.lang.Integer"/>
+	<field name="inep_aluno" class="java.lang.Long"/>
 	<field name="nm_curso" class="java.lang.String"/>
 	<field name="nm_serie" class="java.lang.String"/>
 	<field name="nm_turma" class="java.lang.String"/>
@@ -221,14 +225,14 @@
 			<staticText>
 				<reportElement uuid="b2bada90-ee0d-4d69-9c6e-1b65cd0e007d" x="11" y="158" width="537" height="16"/>
 				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="12" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[ATESTADO DE MATRÍCULA]]></text>
+				<text><![CDATA[DECLARAÇÃO]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="771f33a3-af05-4b24-b21a-ed152dbe52bc" x="58" y="486" width="120" height="14"/>
+				<reportElement uuid="771f33a3-af05-4b24-b21a-ed152dbe52bc" x="22" y="486" width="394" height="14"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cidade}+", "+$F{data_atual}]]></textFieldExpression>
 			</textField>
@@ -286,11 +290,11 @@
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true">
-				<reportElement uuid="c803f32c-11d3-438d-af5f-7290785734f9" x="22" y="311" width="509" height="16"/>
+				<reportElement uuid="c803f32c-11d3-438d-af5f-7290785734f9" x="22" y="311" width="509" height="137"/>
 				<textElement textAlignment="Justified">
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Atestamos para os defidos fins que, o(a) aluno(a): "+$F{nome}+" com o código nº: "+$F{cod_aluno}+" filho(a) de "+$F{nm_mae}+" e de "+$F{nm_pai}+" nascido(a) em "+$F{data_nasc}+", natural de "+$F{municipio_uf_nascimento}+", admitido em "+$F{dt_matricula}+", está regularmente matriculado no ano de "+$F{ano}+" no curso: "+$F{nm_curso}+" no(a) ano/série: "+$F{nm_serie}+"."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Declaro para os devidos fins que se fizerem necessários, que o(a) "+$F{nome}+" nascido(a) em "+$F{data_nasc}+" na cidade de "+$F{municipio_uf_nascimento}+", filho(a) de "+$F{nm_mae}+" e de "+$F{nm_pai}+", foi matriculado no ano letivo de "+$F{ano}+", dia "+$F{dt_matricula}+" neste estabelecimento de Ensino, na turma "+$F{nm_turma}+" do "+$F{nm_curso}+"."]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="97bd019d-ec3b-4b53-953d-230fba35a8ae" x="79" y="52" width="221" height="13"/>
@@ -302,7 +306,7 @@
 			<staticText>
 				<reportElement uuid="922b6611-457b-49a3-aac1-ada8e23952f9" x="178" y="672" width="207" height="13"/>
 				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="8"/>
+					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
 				<text><![CDATA[Assinatura]]></text>
 			</staticText>
@@ -315,6 +319,13 @@
 					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Telefone: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ca75b10a-f58b-4883-b962-fe52c48f2c29" x="22" y="94" width="234" height="20"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>INEP: </b>"+$F{inep_aluno}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
