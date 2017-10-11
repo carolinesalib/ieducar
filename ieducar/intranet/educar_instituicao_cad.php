@@ -70,7 +70,8 @@ class indice extends clsCadastro
 	var $ativo;
 	var $nm_instituicao;
  	var $data_base_transferencia;
- 	var $data_base_remanejamento;
+	var $data_base_remanejamento;
+	var $cnpj;
 
 	function Inicializar()
 	{
@@ -122,6 +123,7 @@ class indice extends clsCadastro
 		$this->campoOculto( "cod_instituicao", $this->cod_instituicao );
 
 		// text
+		$this->campoCnpj( "cnpj", "CNPJ",  int2CNPJ($this->cnpj), true );
 		$this->campoTexto( "nm_instituicao", "Nome da Instituição", $this->nm_instituicao, 30, 255, true );
 		$this->campoCep( "cep", "CEP", int2CEP( $this->cep ), true, "-", false, false );
 		$this->campoTexto( "logradouro", "Logradouro", $this->logradouro, 30, 255, true );
@@ -189,7 +191,8 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmieducarInstituicao( null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao );
+		$this->cnpj = $this->somenteNumeros($this->cnpj);
+		$obj = new clsPmieducarInstituicao( null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, $this->cnpj );
 
 		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
 		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -213,7 +216,8 @@ class indice extends clsCadastro
 		@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao );
+		$this->cnpj = $this->somenteNumeros($this->cnpj);
+		$obj = new clsPmieducarInstituicao( $this->cod_instituicao, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace( "-", "", $this->cep ), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, $this->nm_instituicao, $this->cnpj );
 
 		$obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
 		$obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
@@ -251,6 +255,10 @@ class indice extends clsCadastro
 		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
 		echo "<!--\nErro ao excluir clsPmieducarInstituicao\nvalores obrigatorios\nif( is_numeric( $this->cod_instituicao ) )\n-->";
 		return false;
+	}
+
+	function somenteNumeros($texto) {
+		return preg_replace('/\D/', '', $texto);
 	}
 }
 

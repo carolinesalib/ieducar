@@ -62,6 +62,7 @@ class clsPmieducarInstituicao
   var $nm_instituicao;
   var $data_base_remanejamento;
   var $data_base_transferencia;
+  var $cnpj;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -121,13 +122,13 @@ class clsPmieducarInstituicao
     $cidade = NULL, $bairro = NULL, $logradouro = NULL, $numero = NULL,
     $complemento = NULL, $nm_responsavel = NULL, $ddd_telefone = NULL,
     $telefone = NULL, $data_cadastro = NULL, $data_exclusao = NULL,
-    $ativo = NULL, $nm_instituicao = NULL)
+    $ativo = NULL, $nm_instituicao = NULL, $cnpj = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}instituicao";
 
-    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento";
+    $this->_campos_lista = $this->_todos_campos = "cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_idtlog, ref_sigla_uf, cep, cidade, bairro, logradouro, numero, complemento, nm_responsavel, ddd_telefone, telefone, data_cadastro, data_exclusao, ativo, nm_instituicao, data_base_transferencia, data_base_remanejamento, cnpj";
 
     if (is_numeric($ref_usuario_cad)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -249,6 +250,10 @@ class clsPmieducarInstituicao
 
     if (is_string($nm_instituicao)) {
       $this->nm_instituicao = $nm_instituicao;
+    }
+
+    if (is_numeric($cnpj)) {
+      $this->cnpj = $cnpj;
     }
   }
 
@@ -376,6 +381,12 @@ class clsPmieducarInstituicao
         $gruda = ", ";
       }
 
+      if (is_numeric($this->cnpj)) {
+        $campos .= "{$gruda}cnpj";
+        $valores .= "{$gruda}'{$this->cnpj}'";
+        $gruda = ", ";
+      }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $db->InsertId("{$this->_tabela}_cod_instituicao_seq");
     }
@@ -483,6 +494,11 @@ class clsPmieducarInstituicao
 
       if (is_string($this->data_base_remanejamento) && $this->data_base_remanejamento != '') {
         $set .= "{$gruda}data_base_remanejamento = '{$this->data_base_remanejamento}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->cnpj)) {
+        $set .= "{$gruda}cnpj = '{$this->cnpj}'";
         $gruda = ", ";
       }
 
