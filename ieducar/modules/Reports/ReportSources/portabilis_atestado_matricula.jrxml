@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="atestado_matricula" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b58c92c8-60b6-4afb-ae40-52aa24303ab2">
 	<property name="ireport.zoom" value="0.9090909090909092"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="165"/>
+	<property name="ireport.y" value="48"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
 	</parameter>
@@ -24,9 +24,9 @@
        escola.cod_escola as cod_escola,
        escola_ano_letivo.ano,
        aluno.cod_aluno as cod_aluno,
-       (SELECT cod_aluno_inep
-          FROM modules.educacenso_cod_aluno
-         WHERE educacenso_cod_aluno.cod_aluno = aluno.cod_aluno) AS inep_aluno,
+       (SELECT cod_escola_inep
+          FROM modules.educacenso_cod_escola
+         WHERE educacenso_cod_escola.cod_escola = escola.cod_escola) AS inep_escola,
        (SELECT public.fcn_upper(curso.nm_curso)
 	      FROM pmieducar.curso
 		WHERE  curso.cod_curso = matricula.ref_cod_curso) as nm_curso,
@@ -149,7 +149,17 @@
 
 
        to_char(current_date,'dd/mm/yyyy') AS data_atual,
-       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual
+       to_char(current_timestamp, 'HH24:MI:SS') AS hora_atual,
+       (CASE WHEN matricula.aprovado = 1 THEN 'APROVADO'
+             WHEN matricula.aprovado = 2 THEN 'RETIDO'
+             WHEN matricula.aprovado = 3 THEN 'EM ANDAMENTO'
+             WHEN matricula.aprovado = 4 THEN 'TRANSFERIDO'
+             WHEN matricula.aprovado = 5 THEN 'RECLASSIFICADO'
+             WHEN matricula.aprovado = 6 THEN 'ABANDONO'
+             WHEN matricula.aprovado = 7 THEN 'EM EXAME'
+             WHEN matricula.aprovado = 8 THEN 'APROVADO APÓS EXAME'
+             WHEN matricula.aprovado = 9 THEN 'RETIDO POR FALTA'
+             ELSE '' END) as situacao_aluno
 
   FROM pmieducar.aluno,
        pmieducar.matricula,
@@ -188,7 +198,7 @@
 	<field name="cod_escola" class="java.lang.Integer"/>
 	<field name="ano" class="java.lang.Integer"/>
 	<field name="cod_aluno" class="java.lang.Integer"/>
-	<field name="inep_aluno" class="java.lang.Long"/>
+	<field name="inep_escola" class="java.lang.Long"/>
 	<field name="nm_curso" class="java.lang.String"/>
 	<field name="nm_serie" class="java.lang.String"/>
 	<field name="nm_turma" class="java.lang.String"/>
@@ -214,6 +224,7 @@
 	<field name="email" class="java.lang.String"/>
 	<field name="data_atual" class="java.lang.String"/>
 	<field name="hora_atual" class="java.lang.String"/>
+	<field name="situacao_aluno" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -290,7 +301,7 @@
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true">
-				<reportElement uuid="c803f32c-11d3-438d-af5f-7290785734f9" x="22" y="311" width="509" height="137"/>
+				<reportElement uuid="c803f32c-11d3-438d-af5f-7290785734f9" x="22" y="258" width="509" height="137"/>
 				<textElement textAlignment="Justified">
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
@@ -308,7 +319,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
-				<text><![CDATA[Assinatura]]></text>
+				<text><![CDATA[Diretor(a)]]></text>
 			</staticText>
 			<line>
 				<reportElement uuid="7c6b65ab-b713-433d-8dcf-079a43c5882e" x="177" y="669" width="208" height="1"/>
@@ -321,11 +332,32 @@
 				<textFieldExpression><![CDATA["Telefone: ("+$F{fone_ddd}+") "+$F{fone}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="ca75b10a-f58b-4883-b962-fe52c48f2c29" x="22" y="94" width="234" height="20"/>
+				<reportElement uuid="ca75b10a-f58b-4883-b962-fe52c48f2c29" x="22" y="94" width="51" height="20"/>
 				<textElement markup="html">
-					<font fontName="DejaVu Sans" size="12"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>INEP: </b>"+$F{inep_aluno}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["INEP:"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ca75b10a-f58b-4883-b962-fe52c48f2c29" x="56" y="94" width="234" height="20"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inep_escola}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ca75b10a-f58b-4883-b962-fe52c48f2c29" x="22" y="432" width="112" height="20"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SITUAÇÃO ATUAL:"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ca75b10a-f58b-4883-b962-fe52c48f2c29" x="126" y="432" width="234" height="20"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{situacao_aluno}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
