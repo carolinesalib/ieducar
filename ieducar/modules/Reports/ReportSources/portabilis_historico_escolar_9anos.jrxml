@@ -1110,7 +1110,7 @@ SELECT nm_disciplina,
            FROM pmieducar.historico_escolar he
           WHERE he.ref_cod_instituicao = 1 AND
                 he.ref_cod_aluno = historico_escolar.ref_cod_aluno and he.ativo = 1))  as nome_curso,
-       instituicao.cnpj AS cnpj,
+       lpad(instituicao.cnpj::text, 14, '0') AS cnpj,
 
         (SELECT he.carga_horaria
         FROM pmieducar.historico_escolar he
@@ -1344,7 +1344,7 @@ ORDER BY 1 ASC]]>
 	<field name="status_serie8" class="java.lang.String"/>
 	<field name="status_serie9" class="java.lang.String"/>
 	<field name="quebra" class="java.lang.Integer"/>
-	<field name="cnpj" class="java.math.BigDecimal"/>
+	<field name="cnpj" class="java.lang.String"/>
 	<field name="ch1" class="java.lang.Double"/>
 	<field name="ch2" class="java.lang.Double"/>
 	<field name="ch3" class="java.lang.Double"/>
