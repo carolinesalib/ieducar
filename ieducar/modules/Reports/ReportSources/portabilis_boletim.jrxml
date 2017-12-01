@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4f9ea369-c6c3-48c5-ae82-2872022857d3">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="95"/>
+	<property name="ireport.x" value="93"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -31,7 +31,7 @@
 		<![CDATA[SELECT (SELECT escola_ano_letivo.ano
           FROM pmieducar.escola_ano_letivo
          WHERE escola_ano_letivo.ref_cod_escola = $P{escola} and
-		       ano = $P{ano}) AS ano,
+           ano = $P{ano}) AS ano,
 
       (SELECT public.fcn_upper(instituicao.nm_responsavel)
          FROM pmieducar.instituicao
@@ -158,31 +158,31 @@
 nome_disciplina,
         MAX(matricula) as matricula,
         MAX(id_disciplina) as id_disciplina,
-	MAX(nota1) AS nota1,
+  MAX(nota1) AS nota1,
         MAX(nota2) AS nota2,
         MAX(nota3) AS nota3,
         MAX(nota4) AS nota4,
-		MAX(nota_exame) AS nota_exame,
-		MAX(media) AS media,
+    MAX(nota_exame) AS nota_exame,
+    MAX(media) AS media,
         MAX(nome_curso) AS nome_curso,
-	MAX(nome_serie) AS nome_serie,
+  MAX(nome_serie) AS nome_serie,
         MAX(nome_turma) AS nome_turma,
         MAX(periodo) AS periodo,
-		MAX(situacao) AS situacao,
-		MAX(nome_aluno) AS nome_aluno,
-		MAX(total_faltas_et1) AS total_faltas_et1,
-		MAX(total_faltas_et2) AS total_faltas_et2,
-		MAX(total_faltas_et3) AS total_faltas_et3,
-		MAX(total_faltas_et4) AS total_faltas_et4,
-		MAX(total_faltas) AS total_faltas,
-		MAX(faltas_componente_et1) AS faltas_componente_et1,
-		MAX(faltas_componente_et2) AS faltas_componente_et2,
-		MAX(faltas_componente_et3) AS faltas_componente_et3,
-		MAX(faltas_componente_et4) AS faltas_componente_et4,
-		MAX(total_faltas_componente) AS total_faltas_componente,
+    MAX(situacao) AS situacao,
+    MAX(nome_aluno) AS nome_aluno,
+    MAX(total_faltas_et1) AS total_faltas_et1,
+    MAX(total_faltas_et2) AS total_faltas_et2,
+    MAX(total_faltas_et3) AS total_faltas_et3,
+    MAX(total_faltas_et4) AS total_faltas_et4,
+    MAX(total_faltas) AS total_faltas,
+    MAX(faltas_componente_et1) AS faltas_componente_et1,
+    MAX(faltas_componente_et2) AS faltas_componente_et2,
+    MAX(faltas_componente_et3) AS faltas_componente_et3,
+    MAX(faltas_componente_et4) AS faltas_componente_et4,
+    MAX(total_faltas_componente) AS total_faltas_componente,
                      MAX(total_geral_faltas_componente) AS total_geral_faltas_componente,
-		MAX(frequencia) AS frequencia,
-		MAX(carga_horaria) AS carga_horaria,
+    MAX(frequencia) AS frequencia,
+    MAX(carga_horaria) AS carga_horaria,
                     MAX(curso_hora_falta) AS curso_hora_falta,
                     MAX(carga_horaria_componente) AS carga_horaria_componente,
                     MAX(carga_horaria_serie) AS carga_horaria_serie,
@@ -199,134 +199,144 @@ nome_disciplina,
               componente_curricular.id as id_disciplina,
 
        (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = '10' THEN
-			                   '10,0'
-			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
-			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
+                         '10,0'
+                     WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+                         replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-	      FROM modules.nota_componente_curricular,
-	           modules.nota_aluno
-	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
-	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
-	           nota_aluno.matricula_id = matricula.cod_matricula AND
+        FROM modules.nota_componente_curricular,
+             modules.nota_aluno
+       WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+             nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+             nota_aluno.matricula_id = matricula.cod_matricula AND
              nota_componente_curricular.etapa = '1'
+       ORDER BY nota_componente_curricular.id DESC
+       LIMIT 1
       ) AS nota1,
 
 
        (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = '10' THEN
-			                   '10,0'
-			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
-			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
+                         '10,0'
+                     WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+                         replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-	      FROM modules.nota_componente_curricular,
-	           modules.nota_aluno
-	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
-	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
-	           nota_aluno.matricula_id = matricula.cod_matricula AND
+        FROM modules.nota_componente_curricular,
+             modules.nota_aluno
+       WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+             nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+             nota_aluno.matricula_id = matricula.cod_matricula AND
              nota_componente_curricular.etapa = '2'
+       ORDER BY nota_componente_curricular.id DESC
+       LIMIT 1
       ) AS nota2,
 
        (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = '10' THEN
-			                   '10,0'
-			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
-			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
+                         '10,0'
+                     WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+                         replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-	      FROM modules.nota_componente_curricular,
-	           modules.nota_aluno
-	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
-	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
-	           nota_aluno.matricula_id = matricula.cod_matricula AND
+        FROM modules.nota_componente_curricular,
+             modules.nota_aluno
+       WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+             nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+             nota_aluno.matricula_id = matricula.cod_matricula AND
              nota_componente_curricular.etapa = '3'
+       ORDER BY nota_componente_curricular.id DESC
+       LIMIT 1
       ) AS nota3,
 
        (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = '10' THEN
-			                   '10,0'
-			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
-			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
+                         '10,0'
+                     WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+                         replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-	      FROM modules.nota_componente_curricular,
-	           modules.nota_aluno
-	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
-	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
-	           nota_aluno.matricula_id = matricula.cod_matricula AND
+        FROM modules.nota_componente_curricular,
+             modules.nota_aluno
+       WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+             nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+             nota_aluno.matricula_id = matricula.cod_matricula AND
              nota_componente_curricular.etapa = '4'
+       ORDER BY nota_componente_curricular.id DESC
+       LIMIT 1
       ) AS nota4,
 
 
        (SELECT CASE  WHEN nota_componente_curricular.nota_arredondada = '10' THEN
-			                   '10,0'
-			               WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
-			                   replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
+                         '10,0'
+                     WHEN char_length(nota_componente_curricular.nota_arredondada) = 1 THEN
+                         replace(nota_componente_curricular.nota_arredondada,'.',',') || ',0'
                            ELSE
                                replace(nota_componente_curricular.nota_arredondada,'.',',')
                            END
-	      FROM modules.nota_componente_curricular,
-	           modules.nota_aluno
-	     WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
-	           nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
-	           nota_aluno.matricula_id = matricula.cod_matricula AND
+        FROM modules.nota_componente_curricular,
+             modules.nota_aluno
+       WHERE nota_componente_curricular.nota_aluno_id = nota_aluno.id AND
+             nota_componente_curricular.componente_curricular_id = componente_curricular.id AND
+             nota_aluno.matricula_id = matricula.cod_matricula AND
              nota_componente_curricular.etapa = 'Rc'
+       ORDER BY nota_componente_curricular.id DESC
+       LIMIT 1
       ) AS nota_exame,
 
 
        (SELECT CASE  WHEN nota_componente_curricular_media.media_arredondada = '10' THEN
-			                   '10,0'
-			               WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
-			                   replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
+                         '10,0'
+                     WHEN char_length(nota_componente_curricular_media.media_arredondada) = 1 THEN
+                         replace(nota_componente_curricular_media.media_arredondada,'.',',') || ',0'
                            ELSE
                                replace(nota_componente_curricular_media.media_arredondada,'.',',')
                            END
-	      FROM modules.nota_componente_curricular_media,
-	           modules.nota_aluno
-	     WHERE nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
-	           nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
-	           nota_aluno.matricula_id = matricula.cod_matricula
+        FROM modules.nota_componente_curricular_media,
+             modules.nota_aluno
+       WHERE nota_componente_curricular_media.nota_aluno_id = nota_aluno.id AND
+             nota_componente_curricular_media.componente_curricular_id = componente_curricular.id AND
+             nota_aluno.matricula_id = matricula.cod_matricula
       ) AS media,
 
-	         (SELECT curso.nm_curso
+           (SELECT curso.nm_curso
                 FROM pmieducar.curso
-	          WHERE curso.cod_curso = matricula.ref_cod_curso AND
+            WHERE curso.cod_curso = matricula.ref_cod_curso AND
                         curso.ativo = 1) AS nome_curso,
 
             (SELECT serie.nm_serie
                FROM pmieducar.serie
-	         WHERE serie.cod_serie = $P{serie} AND
+           WHERE serie.cod_serie = $P{serie} AND
                        serie.ativo = 1) AS nome_serie,
 
-	    (SELECT turma.nm_turma
-	       FROM pmieducar.turma,
+      (SELECT turma.nm_turma
+         FROM pmieducar.turma,
                     pmieducar.matricula_turma
               WHERE turma.cod_turma = $P{turma} AND
                     matricula_turma.ref_cod_turma = turma.cod_turma AND
                     matricula_turma.ref_cod_matricula = matricula.cod_matricula AND
                     turma.ativo = 1 AND
-		matricula_turma.ativo = 1) AS nome_turma,
+    matricula_turma.ativo = 1) AS nome_turma,
 
        (select turma_turno.nome from pmieducar.turma_turno, pmieducar.turma where turma_turno.id = turma.turma_turno_id and turma.cod_turma = matricula_turma.ref_cod_turma limit 1) as periodo,
 
-		(SELECT CASE WHEN (SELECT mt.aprovado
-		                     FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 1 THEN 'Aprovado'
+    (SELECT CASE WHEN (SELECT mt.aprovado
+                         FROM pmieducar.matricula mt
+              WHERE mt.cod_matricula = matricula.cod_matricula) = 1 THEN 'Aprovado'
                      WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 2 THEN 'Reprovado'
+                   FROM pmieducar.matricula mt
+              WHERE mt.cod_matricula = matricula.cod_matricula) = 2 THEN 'Reprovado'
                      WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 3 THEN 'Em Andamento'
+                   FROM pmieducar.matricula mt
+              WHERE mt.cod_matricula = matricula.cod_matricula) = 3 THEN 'Em Andamento'
                      WHEN (SELECT mt.aprovado
-					         FROM pmieducar.matricula mt
-							WHERE mt.cod_matricula = matricula.cod_matricula) = 4 THEN 'Transferido'
+                   FROM pmieducar.matricula mt
+              WHERE mt.cod_matricula = matricula.cod_matricula) = 4 THEN 'Transferido'
                 ELSE 'Reclassificado'
                 END) AS situacao,
 
-		(SELECT public.fcn_upper(pessoa.nome)
+    (SELECT public.fcn_upper(pessoa.nome)
            FROM cadastro.pessoa,
                 cadastro.fisica,
                 pmieducar.aluno
@@ -340,7 +350,7 @@ nome_disciplina,
           WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_geral.etapa = '1' AND
-				falta_aluno.tipo_falta = 1) as total_faltas_et1,
+        falta_aluno.tipo_falta = 1) as total_faltas_et1,
 
         (SELECT sum(falta_geral.quantidade)
            FROM modules.falta_geral,
@@ -348,7 +358,7 @@ nome_disciplina,
           WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_geral.etapa = '2' AND
-				falta_aluno.tipo_falta = 1) as total_faltas_et2,
+        falta_aluno.tipo_falta = 1) as total_faltas_et2,
 
         (SELECT sum(falta_geral.quantidade)
            FROM modules.falta_geral,
@@ -364,7 +374,7 @@ nome_disciplina,
           WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_geral.etapa = '4' AND
-				falta_aluno.tipo_falta = 1) as total_faltas_et4,
+        falta_aluno.tipo_falta = 1) as total_faltas_et4,
 
         (SELECT sum(falta_geral.quantidade)
            FROM modules.falta_geral,
@@ -379,7 +389,7 @@ nome_disciplina,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = '1' AND
-	      falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
+        falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
                 falta_aluno.tipo_falta = 2) as faltas_componente_et1,
 
        (SELECT sum(falta_componente_curricular.quantidade)
@@ -388,8 +398,8 @@ nome_disciplina,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = '2' AND
-				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
-				falta_aluno.tipo_falta = 2) as faltas_componente_et2,
+        falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
+        falta_aluno.tipo_falta = 2) as faltas_componente_et2,
 
        (SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
@@ -397,8 +407,8 @@ nome_disciplina,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = '3' AND
-				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
-				falta_aluno.tipo_falta = 2) as faltas_componente_et3,
+        falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
+        falta_aluno.tipo_falta = 2) as faltas_componente_et3,
 
        (SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
@@ -406,17 +416,17 @@ nome_disciplina,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa = '4' AND
-				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
-				falta_aluno.tipo_falta = 2) as faltas_componente_et4,
+        falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
+        falta_aluno.tipo_falta = 2) as faltas_componente_et4,
 
        (SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
+        falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
-				falta_aluno.tipo_falta = 2) as total_faltas_componente,
+        falta_aluno.tipo_falta = 2) as total_faltas_componente,
 
        (SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
@@ -424,7 +434,7 @@ nome_disciplina,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
-				falta_aluno.tipo_falta = 2) as total_geral_faltas_componente,
+        falta_aluno.tipo_falta = 2) as total_geral_faltas_componente,
 
 
   trunc(modules.frequencia_da_matricula(matricula.cod_matricula)::decimal,2) AS frequencia,
@@ -446,21 +456,21 @@ nome_disciplina,
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
-				falta_aluno.tipo_falta = 2) * (select curso.hora_falta * 100 from pmieducar.curso where curso.cod_curso = matricula.ref_cod_curso))/ (select serie.carga_horaria from pmieducar.serie where  serie.cod_serie = matricula.ref_ref_cod_serie))) as frequencia_boletim,
+        falta_aluno.tipo_falta = 2) * (select curso.hora_falta * 100 from pmieducar.curso where curso.cod_curso = matricula.ref_cod_curso))/ (select serie.carga_horaria from pmieducar.serie where  serie.cod_serie = matricula.ref_ref_cod_serie))) as frequencia_boletim,
 
       (SELECT (100 -  (((SELECT sum(falta_componente_curricular.quantidade)
            FROM modules.falta_componente_curricular,
                 modules.falta_aluno
           WHERE falta_componente_curricular.falta_aluno_id = falta_aluno.id AND
                 falta_aluno.matricula_id = matricula.cod_matricula AND
-				falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
+        falta_componente_curricular.componente_curricular_id = componente_curricular.id AND
                 falta_componente_curricular.etapa in ('1','2','3','4') AND
-				falta_aluno.tipo_falta = 2) *
-				(select curso.hora_falta * 100 from pmieducar.curso
-				where curso.cod_curso = matricula.ref_cod_curso))/
-				(select carga_horaria :: int from modules.componente_curricular_ano_escolar
-				where   componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id AND
-				componente_curricular_ano_escolar.ano_escolar_id = matricula.ref_ref_cod_serie)))) as frequencia_boletim_componente,
+        falta_aluno.tipo_falta = 2) *
+        (select curso.hora_falta * 100 from pmieducar.curso
+        where curso.cod_curso = matricula.ref_cod_curso))/
+        (select carga_horaria :: int from modules.componente_curricular_ano_escolar
+        where   componente_curricular_ano_escolar.componente_curricular_id = componente_curricular.id AND
+        componente_curricular_ano_escolar.ano_escolar_id = matricula.ref_ref_cod_serie)))) as frequencia_boletim_componente,
 
 (select tipo_presenca
    from pmieducar.serie,
@@ -552,7 +562,7 @@ ORDER BY nome_aluno, nome_disciplina]]>
 	<field name="faltas_componente_et4" class="java.lang.Long"/>
 	<field name="total_faltas_componente" class="java.lang.Long"/>
 	<field name="total_geral_faltas_componente" class="java.lang.Long"/>
-	<field name="frequencia" class="java.lang.String"/>
+	<field name="frequencia" class="java.math.BigDecimal"/>
 	<field name="carga_horaria" class="java.math.BigDecimal"/>
 	<field name="curso_hora_falta" class="java.lang.Double"/>
 	<field name="carga_horaria_componente" class="java.lang.Integer"/>
