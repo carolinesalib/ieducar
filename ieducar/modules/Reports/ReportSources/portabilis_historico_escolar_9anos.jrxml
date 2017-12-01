@@ -1229,8 +1229,8 @@ SELECT nm_disciplina,
                 AND hee.extra_curricular = 0)
             AND substring(he.nm_serie,1,1) = '9' LIMIT 1) AS ch9,
        historico_escolar.ref_cod_matricula AS cod_matricula,
-       aluno.nm_pai AS nome_pai,
-       aluno.nm_mae AS nome_mae,
+       pessoa_pai.nome AS nome_pai,
+       pessoa_mae.nome AS nome_mae,
        educacenso_cod_aluno.cod_aluno_inep AS inep_aluno,
        educacenso_cod_escola.cod_escola_inep AS inep_escola
 
@@ -1241,6 +1241,9 @@ SELECT nm_disciplina,
        modules.educacenso_cod_escola,
        pmieducar.aluno
   LEFT JOIN modules.educacenso_cod_aluno ON (educacenso_cod_aluno.cod_aluno = aluno.cod_aluno)
+  INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
+   LEFT JOIN cadastro.pessoa AS pessoa_pai ON (pessoa_pai.idpes = fisica.idpes_pai)
+   LEFT JOIN cadastro.pessoa AS pessoa_mae ON (pessoa_mae.idpes = fisica.idpes_mae)
 WHERE  instituicao.cod_instituicao = $P{instituicao} AND
        escola.ref_cod_instituicao = instituicao.cod_instituicao AND
        historico_escolar.ref_cod_instituicao = instituicao.cod_instituicao AND
