@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_boletim" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4f9ea369-c6c3-48c5-ae82-2872022857d3">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="207"/>
+	<property name="ireport.x" value="95"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="ano" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new java.lang.Integer(0)]]></defaultValueExpression>
@@ -427,15 +427,7 @@ nome_disciplina,
 				falta_aluno.tipo_falta = 2) as total_geral_faltas_componente,
 
 
-  (SELECT ((((select serie.dias_letivos
-                       from pmieducar.serie
-                      where serie.cod_serie = matricula.ref_ref_cod_serie)::float -
-                   (SELECT sum(falta_geral.quantidade)
-                       FROM modules.falta_geral,
-                            modules.falta_aluno
-                      WHERE falta_geral.falta_aluno_id = falta_aluno.id AND
-                            falta_aluno.matricula_id = matricula.cod_matricula AND
-                            falta_geral.etapa in('1','2','3','4')))::float * 100::float )::float / (select serie.dias_letivos from pmieducar.serie where serie.cod_serie = matricula.ref_ref_cod_serie) :: float,'999')::varchar) AS frequencia,
+  trunc(modules.frequencia_da_matricula(matricula.cod_matricula)::decimal,2) AS frequencia,
 
     (SELECT sum(to_number(componente_curricular_ano_escolar.carga_horaria::varchar,'999'))
        FROM modules.componente_curricular_ano_escolar
@@ -1019,18 +1011,7 @@ ORDER BY nome_aluno, nome_disciplina]]>
 					<textFieldExpression><![CDATA[$F{total_geral_faltas_componente}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="1017fdae-39da-41ac-a63d-2b175117bcd0" x="510" y="145" width="26" height="11" printWhenGroupChanges="matricula">
-						<printWhenExpression><![CDATA[$F{tipo_presenca} == 1]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="DejaVu Sans" size="8" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{frequencia_boletim}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement uuid="1017fdae-39da-41ac-a63d-2b175117bcd0" x="510" y="145" width="26" height="11" printWhenGroupChanges="matricula">
-						<printWhenExpression><![CDATA[$F{tipo_presenca} == 2]]></printWhenExpression>
-					</reportElement>
+					<reportElement uuid="1017fdae-39da-41ac-a63d-2b175117bcd0" x="506" y="145" width="34" height="11" printWhenGroupChanges="matricula"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false"/>
 					</textElement>
