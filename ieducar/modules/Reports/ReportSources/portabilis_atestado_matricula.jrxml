@@ -305,7 +305,7 @@
 				<textElement textAlignment="Justified">
 					<font fontName="DejaVu Sans" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Declaro para os devidos fins que se fizerem necessários, que o(a) "+$F{nome}+" nascido(a) em "+$F{data_nasc}+" na cidade de "+$F{municipio}+" - "+$F{municipio_uf_nascimento}+", filho(a) de "+$F{nm_mae}+" e de "+$F{nm_pai}+", foi matriculado no ano letivo de "+$F{ano}+", dia "+$F{dt_matricula}+" neste estabelecimento de Ensino, na turma "+$F{nm_turma}+" do "+$F{nm_curso}+"."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Declaro para os devidos fins que se fizerem necessários, que o(a) "+$F{nome}+" nascido(a) em "+$F{data_nasc}+" na cidade de "+$F{municipio_uf_nascimento}+", filho(a) de "+$F{nm_mae}+" e de "+$F{nm_pai}+", foi matriculado no ano letivo de "+$F{ano}+", dia "+$F{dt_matricula}+" neste estabelecimento de Ensino, na turma "+$F{nm_turma}+" do "+$F{nm_curso}+"."]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="97bd019d-ec3b-4b53-953d-230fba35a8ae" x="79" y="52" width="221" height="13"/>
