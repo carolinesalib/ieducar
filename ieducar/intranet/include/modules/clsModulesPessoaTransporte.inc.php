@@ -324,27 +324,27 @@ class clsModulesPessoaTransporte
 
     if (is_string($nome_pessoa)) {
         $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER((
+        {$whereAnd} (LOWER((
           SELECT
             nome
           FROM
             cadastro.pessoa
           WHERE
             idpes = ref_idpes
-         ))) LIKE TO_ASCII(LOWER('%{$nome_pessoa}%')) ";
+         ))) LIKE (LOWER('%{$nome_pessoa}%')) ";
       $whereAnd = " AND ";
     }       
 
     if (is_string($nome_destino)) {
         $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER((
+        {$whereAnd} (LOWER((
           SELECT
             nome
           FROM
             cadastro.pessoa
           WHERE
             idpes = ref_idpes_destino
-         ))) LIKE TO_ASCII(LOWER('%{$nome_destino}%')) ";
+         ))) LIKE (LOWER('%{$nome_destino}%')) ";
       $whereAnd = " AND ";
     }             
 

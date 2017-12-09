@@ -34779,7 +34779,7 @@ CREATE INDEX i_aluno_beneficio_nm_beneficio ON aluno_beneficio USING btree (nm_b
 -- Name: i_aluno_beneficio_nm_beneficio_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_aluno_beneficio_nm_beneficio_asc ON aluno_beneficio USING btree (to_ascii((nm_beneficio)::text));
+CREATE INDEX i_aluno_beneficio_nm_beneficio_asc ON aluno_beneficio USING btree (((nm_beneficio)::text));
 
 
 --
@@ -34898,7 +34898,7 @@ CREATE INDEX i_calendario_dia_motivo_sigla ON calendario_dia_motivo USING btree 
 -- Name: i_calendario_dia_motivo_sigla_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_calendario_dia_motivo_sigla_asc ON calendario_dia_motivo USING btree (to_ascii((sigla)::text));
+CREATE INDEX i_calendario_dia_motivo_sigla_asc ON calendario_dia_motivo USING btree (((sigla)::text));
 
 
 --
@@ -34947,7 +34947,7 @@ CREATE INDEX i_coffebreak_tipo_nm_tipo ON coffebreak_tipo USING btree (nm_tipo);
 -- Name: i_coffebreak_tipo_nm_tipo_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_coffebreak_tipo_nm_tipo_asc ON coffebreak_tipo USING btree (to_ascii((nm_tipo)::text));
+CREATE INDEX i_coffebreak_tipo_nm_tipo_asc ON coffebreak_tipo USING btree (((nm_tipo)::text));
 
 
 --
@@ -34989,7 +34989,7 @@ CREATE INDEX i_curso_nm_curso ON curso USING btree (nm_curso);
 -- Name: i_curso_nm_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_curso_nm_curso_asc ON curso USING btree (to_ascii((nm_curso)::text));
+CREATE INDEX i_curso_nm_curso_asc ON curso USING btree (((nm_curso)::text));
 
 
 --
@@ -35003,7 +35003,7 @@ CREATE INDEX i_curso_objetivo_curso ON curso USING btree (objetivo_curso);
 -- Name: i_curso_objetivo_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_curso_objetivo_curso_asc ON curso USING btree (to_ascii(objetivo_curso));
+CREATE INDEX i_curso_objetivo_curso_asc ON curso USING btree ((objetivo_curso));
 
 
 --
@@ -35052,7 +35052,7 @@ CREATE INDEX i_curso_sgl_curso ON curso USING btree (sgl_curso);
 -- Name: i_curso_sgl_curso_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_curso_sgl_curso_asc ON curso USING btree (to_ascii((sgl_curso)::text));
+CREATE INDEX i_curso_sgl_curso_asc ON curso USING btree (((sgl_curso)::text));
 
 
 --
@@ -35066,7 +35066,7 @@ CREATE INDEX i_disciplina_abreviatura ON disciplina USING btree (abreviatura);
 -- Name: i_disciplina_abreviatura_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_disciplina_abreviatura_asc ON disciplina USING btree (to_ascii((abreviatura)::text));
+CREATE INDEX i_disciplina_abreviatura_asc ON disciplina USING btree (((abreviatura)::text));
 
 
 --
@@ -35101,7 +35101,7 @@ CREATE INDEX i_disciplina_nm_disciplina ON disciplina USING btree (nm_disciplina
 -- Name: i_disciplina_nm_disciplina_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_disciplina_nm_disciplina_asc ON disciplina USING btree (to_ascii((nm_disciplina)::text));
+CREATE INDEX i_disciplina_nm_disciplina_asc ON disciplina USING btree (((nm_disciplina)::text));
 
 
 --
@@ -35129,7 +35129,7 @@ CREATE INDEX i_disciplina_topico_nm_topico ON disciplina_topico USING btree (nm_
 -- Name: i_disciplina_topico_nm_topico_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_disciplina_topico_nm_topico_asc ON disciplina_topico USING btree (to_ascii((nm_topico)::text));
+CREATE INDEX i_disciplina_topico_nm_topico_asc ON disciplina_topico USING btree (((nm_topico)::text));
 
 
 --
@@ -35171,7 +35171,7 @@ CREATE INDEX i_escola_complemento_bairro ON escola_complemento USING btree (bair
 -- Name: i_escola_complemento_bairro_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_complemento_bairro_asc ON escola_complemento USING btree (to_ascii((bairro)::text));
+CREATE INDEX i_escola_complemento_bairro_asc ON escola_complemento USING btree (((bairro)::text));
 
 
 --
@@ -35185,7 +35185,7 @@ CREATE INDEX i_escola_complemento_cep ON escola_complemento USING btree (cep);
 -- Name: i_escola_complemento_cep_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_complemento_cep_asc ON escola_complemento USING btree (to_ascii((cep)::text));
+CREATE INDEX i_escola_complemento_cep_asc ON escola_complemento USING btree (((cep)::text));
 
 
 --
@@ -35199,7 +35199,7 @@ CREATE INDEX i_escola_complemento_complemento ON escola_complemento USING btree 
 -- Name: i_escola_complemento_complemento_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_complemento_complemento_asc ON escola_complemento USING btree (to_ascii((complemento)::text));
+CREATE INDEX i_escola_complemento_complemento_asc ON escola_complemento USING btree (((complemento)::text));
 
 
 --
@@ -35213,7 +35213,7 @@ CREATE INDEX i_escola_complemento_email ON escola_complemento USING btree (email
 -- Name: i_escola_complemento_email_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_complemento_email_asc ON escola_complemento USING btree (to_ascii((email)::text));
+CREATE INDEX i_escola_complemento_email_asc ON escola_complemento USING btree (((email)::text));
 
 
 --
@@ -35227,7 +35227,7 @@ CREATE INDEX i_escola_complemento_logradouro ON escola_complemento USING btree (
 -- Name: i_escola_complemento_logradouro_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_complemento_logradouro_asc ON escola_complemento USING btree (to_ascii((bairro)::text));
+CREATE INDEX i_escola_complemento_logradouro_asc ON escola_complemento USING btree (((bairro)::text));
 
 
 --
@@ -35241,7 +35241,7 @@ CREATE INDEX i_escola_complemento_municipio ON escola_complemento USING btree (m
 -- Name: i_escola_complemento_municipio_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_complemento_municipio_asc ON escola_complemento USING btree (to_ascii((municipio)::text));
+CREATE INDEX i_escola_complemento_municipio_asc ON escola_complemento USING btree (((municipio)::text));
 
 
 --
@@ -35255,7 +35255,7 @@ CREATE INDEX i_escola_complemento_nm_escola ON escola_complemento USING btree (n
 -- Name: i_escola_complemento_nm_escola_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_complemento_nm_escola_asc ON escola_complemento USING btree (to_ascii((nm_escola)::text));
+CREATE INDEX i_escola_complemento_nm_escola_asc ON escola_complemento USING btree (((nm_escola)::text));
 
 
 --
@@ -35304,7 +35304,7 @@ CREATE INDEX i_escola_localizacao_nm_localizacao ON escola_localizacao USING btr
 -- Name: i_escola_localizacao_nm_localizacao_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_localizacao_nm_localizacao_asc ON escola_localizacao USING btree (to_ascii((nm_localizacao)::text));
+CREATE INDEX i_escola_localizacao_nm_localizacao_asc ON escola_localizacao USING btree (((nm_localizacao)::text));
 
 
 --
@@ -35332,7 +35332,7 @@ CREATE INDEX i_escola_rede_ensino_nm_rede ON escola_rede_ensino USING btree (nm_
 -- Name: i_escola_rede_ensino_nm_rede_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_rede_ensino_nm_rede_asc ON escola_rede_ensino USING btree (to_ascii((nm_rede)::text));
+CREATE INDEX i_escola_rede_ensino_nm_rede_asc ON escola_rede_ensino USING btree (((nm_rede)::text));
 
 
 --
@@ -35416,7 +35416,7 @@ CREATE INDEX i_escola_sigla ON escola USING btree (sigla);
 -- Name: i_escola_sigla_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_escola_sigla_asc ON escola USING btree (to_ascii((sigla)::text));
+CREATE INDEX i_escola_sigla_asc ON escola USING btree (((sigla)::text));
 
 
 --
@@ -35430,7 +35430,7 @@ CREATE INDEX i_funcao_abreviatura ON funcao USING btree (abreviatura);
 -- Name: i_funcao_abreviatura_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_funcao_abreviatura_asc ON funcao USING btree (to_ascii((abreviatura)::text));
+CREATE INDEX i_funcao_abreviatura_asc ON funcao USING btree (((abreviatura)::text));
 
 
 --
@@ -35451,7 +35451,7 @@ CREATE INDEX i_funcao_nm_funcao ON funcao USING btree (nm_funcao);
 -- Name: i_funcao_nm_funcao_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_funcao_nm_funcao_asc ON funcao USING btree (to_ascii((nm_funcao)::text));
+CREATE INDEX i_funcao_nm_funcao_asc ON funcao USING btree (((nm_funcao)::text));
 
 
 --
@@ -35493,7 +35493,7 @@ CREATE INDEX i_habilitacao_ref_usuario_cad ON habilitacao USING btree (ref_usuar
 -- Name: i_habilitacaoo_nm_tipo_asc; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE INDEX i_habilitacaoo_nm_tipo_asc ON habilitacao USING btree (to_ascii((nm_tipo)::text));
+CREATE INDEX i_habilitacaoo_nm_tipo_asc ON habilitacao USING btree (((nm_tipo)::text));
 
 
 --

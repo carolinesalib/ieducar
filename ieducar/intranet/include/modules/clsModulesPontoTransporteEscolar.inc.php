@@ -188,7 +188,7 @@ class clsModulesPontoTransporteEscolar
     }
 
     if (is_string($descricao)) {
-      $filtros .= "{$whereAnd} TO_ASCII(LOWER(descricao)) LIKE TO_ASCII(LOWER('%{$descricao}%'))";
+      $filtros .= "{$whereAnd} (LOWER(descricao)) LIKE (LOWER('%{$descricao}%'))";
       $whereAnd = " AND ";
     }
 
