@@ -649,7 +649,8 @@ class DiarioApiController extends ApiCoreController
     // set service
     if (! isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
       try {
-        $params = array('matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa);
+        $idUsuario = ($this->getSession()->id_pessoa ? $this->getSession()->id_pessoa : 1);
+        $params = array('matricula' => $matriculaId, 'usuario' => $idUsuario);
         $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
       }
       catch (Exception $e){
