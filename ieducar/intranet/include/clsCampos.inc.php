@@ -246,7 +246,7 @@ class clsCampos extends Core_Controller_Page_Abstract
   }
 
   function campoCheck($nome, $campo, $valor, $desc = '', $duplo = FALSE,
-    $script = FALSE, $disable = FALSE)
+    $script = FALSE, $disable = FALSE, $help = '')
   {
     $arr_componente = array(
       $duplo ? 'checkDuplo' : 'check',
@@ -255,6 +255,7 @@ class clsCampos extends Core_Controller_Page_Abstract
       $valor,
       $desc,
       $script,
+      $help,
       ($disable) ? 'disabled' : ''
     );
 

@@ -61,6 +61,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     'parecerDescritivo'    => 'parecer_descritivo',
     'tipoPresenca'         => 'tipo_presenca',
     'mediaRecuperacao'     => 'media_recuperacao',
+    'aprovaNotaExame'      => 'aprova_nota_exame'
   );
 
   /**

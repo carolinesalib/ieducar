@@ -60,13 +60,15 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     'porcentagemPresenca'  => NULL,
     'parecerDescritivo'    => NULL,
     'tipoPresenca'         => NULL,
-    'mediaRecuperacao'     => NULL
+    'mediaRecuperacao'     => NULL,
+    'aprovaNotaExame'      => NULL
   );
 
   protected $_dataTypes = array(
     'media' => 'numeric',
     'porcentagemPresenca' => 'numeric',
-    'mediaRecuperacao' => 'numeric'
+    'mediaRecuperacao' => 'numeric',
+    'aprovaNotaExame' => 'numeric'
   );
 
   protected $_references = array(

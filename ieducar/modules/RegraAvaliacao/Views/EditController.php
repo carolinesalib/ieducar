@@ -108,6 +108,10 @@ class EditController extends Core_Controller_Page_EditController
     'tipoPresenca' => array(
       'label'  => 'Apuração de presença',
       'help'   => ''
+    ),
+    'aprovaNotaExame' => array(
+      'label'  => 'Aprovar alunos pela nota de exame',
+      'help'   => 'Aprova automaticamente o aluno quando a nota de exame é maior que a média final para promossão'
     )
   );
 
@@ -179,7 +183,7 @@ var tabela_arredondamento = new function() {
   {
     parent::_preRender();
 
-    // Adiciona o cףdigo Javascript de controle do formulבrio.
+    // Adiciona o código Javascript de controle do formulário.
     $js = sprintf('
       <script type="text/javascript">
         %s
@@ -207,6 +211,7 @@ var tabela_arredondamento = new function() {
     $this->prependOutput($js);
 
     Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/RegraAvaliacao/Assets/Javascripts/RegraAvaliacao.js');
 
     $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
     $localizacao = new LocalizacaoSistema();
@@ -295,5 +300,45 @@ var tabela_arredondamento = new function() {
     $this->campoRadio('tipoPresenca', $this->_getLabel('tipoPresenca'),
       $tipoPresenca->getEnums(), $this->getEntity()->get('tipoPresenca'), '',
       $this->_getHelp('tipoPresenca'));
+
+    // Aprova pela nota de exame
+    $this->campoCheck('aprovaNotaExame', $this->_getLabel('aprovaNotaExame'),
+        $this->getEntity()->aprovaNotaExame, '', FALSE, FALSE, FALSE, $this->_getHelp('aprovaNotaExame'));
+  }
+
+  protected function _save() {
+    $data = array();
+
+    foreach ($_POST as $key => $val) {
+      if (array_key_exists($key, $this->_formMap)) {
+        $data[$key] = $val;
+      }
+    }
+
+    if(!isset($data['aprovaNotaExame'])){
+      $data['aprovaNotaExame'] = '0';
+    }
+
+    // Verifica pela existência do field identity
+    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+      $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+    }
+
+    if (isset($entity)) {
+      $this->getEntity()->setOptions($data);
+    }
+    else {
+      $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
+    }
+
+    try {
+      $this->getDataMapper()->save($this->getEntity());
+      return TRUE;
+    }
+    catch (Exception $e) {
+      // TODO: ver @todo do docblock
+      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      return FALSE;
+    }
   }
 }
