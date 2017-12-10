@@ -2582,6 +2582,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       // Calcula a média
       $media = $this->_calculaMedia($notas);
 
+      // Substitui média pela nota exame
+      $permiteAprovarNotaExame = ($notas['Rc'] >= $this->getRegra()->get("media"));
+      if ($this->getRegra()->get("aprovaNotaExame") && $permiteAprovarNotaExame) {
+        $media = $notas['Rc'];
+      }
+
       // Cria uma nova instância de média, já com a nota arredondada e a etapa
       $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
         'notaAluno' => $this->_getNotaAluno()->id,
