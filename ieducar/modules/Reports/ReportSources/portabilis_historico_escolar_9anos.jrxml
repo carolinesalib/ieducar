@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portabilis_historico_escolar" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b207692a-3e84-4d74-845d-329366699ea8">
 	<property name="ireport.zoom" value="2.1435888100000025"/>
-	<property name="ireport.x" value="293"/>
+	<property name="ireport.x" value="190"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<subDataset name="dataset1" uuid="5d8785c2-e4e7-4276-8f51-0b774abc773f"/>
@@ -1228,7 +1228,10 @@ SELECT nm_disciplina,
                 AND hee.ativo = 1
                 AND hee.extra_curricular = 0)
             AND substring(he.nm_serie,1,1) = '9' LIMIT 1) AS ch9,
-       historico_escolar.ref_cod_matricula AS cod_matricula,
+       (SELECT MAX(cod_matricula)
+          FROM pmieducar.matricula
+         WHERE ref_cod_aluno = aluno.cod_aluno
+           AND ativo = 1) AS cod_matricula,
        pessoa_pai.nome AS nome_pai,
        pessoa_mae.nome AS nome_mae,
        educacenso_cod_aluno.cod_aluno_inep AS inep_aluno,
@@ -1251,7 +1254,7 @@ WHERE  instituicao.cod_instituicao = $P{instituicao} AND
        historico_disciplinas.ref_sequencial = historico_escolar.sequencial AND
        aluno.cod_aluno = historico_escolar.ref_cod_aluno AND
        historico_escolar.ref_cod_aluno = $P{aluno} AND
-       educacenso_cod_escola.cod_escola = escola.cod_escola AND
+       educacenso_cod_escola.cod_escola = $P{escola} AND
        instituicao.ativo = 1 AND
        historico_escolar.ativo = 1 AND
        historico_escolar.sequencial = (SELECT max(he.sequencial)
