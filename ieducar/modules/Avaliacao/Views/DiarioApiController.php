@@ -765,7 +765,7 @@ class DiarioApiController extends ApiCoreController
       $componente['nota_exame']            = $this->getNotaExame($componente['id']);
       $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
       $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
-      $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
+      $componente['situacao']              = utf8_encode($this->getSituacaoMatricula($componente['id']));
       $componente['nota_necessaria_exame'] = ($componente['situacao'] == 'Em Exame' ? $this->getNotaNecessariaExame($componente['id']) : null );
 
       if (!empty($componente['nota_necessaria_exame']))
