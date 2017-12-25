@@ -2592,7 +2592,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
       $media = $this->_calculaMedia($notas);
 
       // Substitui média pela nota exame
-      $permiteAprovarNotaExame = ($notas['Rc'] >= $this->getRegra()->get("media"));
+      $permiteAprovarNotaExame = ($notas['Rc'] >= $media);
       if ($this->getRegra()->get("aprovaNotaExame") && $permiteAprovarNotaExame) {
         $media = $notas['Rc'];
       }
